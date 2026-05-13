@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinkedIn ou Interpol ? — Le jeu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2eb;
+      --red: #e63329;
+      --blue: #0a66c2;
+      --gray: #b0aa9e;
+      --card-bg: #131310;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .nav-logo span.li { color: var(--blue); }
+    .nav-logo span.int { color: var(--red); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+    nav ul a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--white); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 2.5rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,102,194,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      right: -5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(230,51,41,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--gray);
+    }
+
+    .hero-title {
+      font-size: clamp(4rem, 10vw, 9rem);
+      font-weight: 800;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+      max-width: 900px;
+    }
+
+    .hero-title .word-li { color: var(--blue); }
+    .hero-title .word-int { color: var(--red); }
+    .hero-title .word-ou {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 0.7em;
+      color: var(--gray);
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: var(--gray);
+      max-width: 480px;
+      line-height: 1.65;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--white);
+      color: var(--black);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      border-radius: 2px;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .hero-cta:hover { background: #ddd9d1; transform: translateY(-2px); }
+    .hero-cta .arrow { font-size: 18px; transition: transform 0.2s; }
+    .hero-cta:hover .arrow { transform: translateX(4px); }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid var(--border);
+      border-radius: 100px;
+      padding: 0.5rem 1rem;
+      font-size: 12px;
+      color: var(--gray);
+      margin-left: 1rem;
+      font-family: 'DM Mono', monospace;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* SECTION */
+    section { padding: 6rem 2.5rem; }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    /* HOW IT WORKS */
+    #comment-jouer { border-top: 0.5px solid var(--border); }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 0.5px solid var(--border);
+      margin-top: 4rem;
+    }
+
+    .step {
+      background: var(--black);
+      padding: 2.5rem 2rem;
+      position: relative;
+    }
+
+    .step-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--gray);
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .step-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--white);
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* RÈGLES */
+    #regles { border-top: 0.5px solid var(--border); background: var(--card-bg); }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    @media (max-width: 640px) { .rules-grid { grid-template-columns: 1fr; } }
+
+    .rule-block {
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .rule-block.li-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--blue);
+    }
+    .rule-block.int-block::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--red);
+    }
+
+    .rule-block h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+    }
+    .rule-block.li-block h3 { color: var(--blue); }
+    .rule-block.int-block h3 { color: var(--red); }
+
+    .rule-block ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .rule-block ul li {
+      font-size: 14px;
+      color: var(--gray);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      line-height: 1.5;
+    }
+    .rule-block ul li::before {
+      content: '—';
+      color: var(--gray);
+      flex-shrink: 0;
+      opacity: 0.5;
+    }
+
+    /* SCORING */
+    .scoring-table {
+      margin-top: 3rem;
+      border: 0.5px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .scoring-row {
+      display: grid;
+      grid-template-columns: 1fr 120px;
+      padding: 1rem 1.5rem;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 14px;
+      align-items: center;
+    }
+    .scoring-row:last-child { border-bottom: none; }
+    .scoring-row .label { color: var(--gray); }
+    .scoring-row .points { font-family: 'DM Mono', monospace; font-size: 16px; color: var(--white); text-align: right; }
+    .scoring-row.header { background: rgba(255,255,255,0.03); }
+    .scoring-row.header .label,
+    .scoring-row.header .points {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    /* CONFIDENTIALITE */
+    #confidentialite { border-top: 0.5px solid var(--border); }
+
+    .privacy-content {
+      max-width: 680px;
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .privacy-block h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--white);
+    }
+    .privacy-block p {
+      font-size: 14px;
+      color: var(--gray);
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--gray);
+    }
+    footer a { color: var(--gray); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      section { padding: 4rem 1.5rem; }
+      .steps-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+    .hero-title { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-desc { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <span class="li">Linked</span>In <span style="color:var(--gray)">ou</span> <span class="int">Inter</span>pol
+    </div>
+    <ul>
+      <li><a href="#comment-jouer">Comment jouer</a></li>
+      <li><a href="#regles">Règles</a></li>
+      <li><a href="#confidentialite">Confidentialité</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Le jeu de devinette ultime</div>
+    <h1 class="hero-title">
+      <span class="word-li">LinkedIn</span><br>
+      <span class="word-ou">ou</span><br>
+      <span class="word-int">Interpol ?</span>
+    </h1>
+    <p class="hero-desc">
+      Une photo apparaît à l'écran. Un visage. Un regard. À vous de décider : profil professionnel ou fiche criminelle ?
+    </p>
+    <div class="hero-actions">
+      <a href="#comment-jouer" class="hero-cta">
+        Découvrir le jeu
+        <span class="arrow">→</span>
+      </a>
+      <span class="hero-badge">
+        <span class="dot"></span>
+        Bientôt disponible
+      </span>
+    </div>
+  </section>
+
+  <!-- COMMENT JOUER -->
+  <section id="comment-jouer">
+    <div class="section-label">Comment ça marche</div>
+    <h2 class="section-title">Simple.<br>Brutal. Drôle.</h2>
+
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <span class="step-icon">👥</span>
+        <div class="step-title">Réunissez vos amis</div>
+        <p class="step-desc">De 2 à 8 joueurs autour d'un écran. Plus on est de fous, plus on rit.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <span class="step-icon">🖼️</span>
+        <div class="step-title">Une photo s'affiche</div>
+        <p class="step-desc">Un portrait apparaît à l'écran. Rien d'autre. Juste un visage.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <span class="step-icon">🤔</span>
+        <div class="step-title">Devinez l'origine</div>
+        <p class="step-desc">LinkedIn ou Interpol ? Chaque joueur vote en secret. Vous avez 10 secondes.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <span class="step-icon">🏆</span>
+        <div class="step-title">On révèle et on score</div>
+        <p class="step-desc">La vérité éclate, les points tombent, les excuses fusent. Partie suivante !</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RÈGLES -->
+  <section id="regles">
+    <div class="section-label">Les règles du jeu</div>
+    <h2 class="section-title">Ce qu'il faut<br>savoir avant<br>de jouer.</h2>
+
+    <div class="rules-grid">
+      <div class="rule-block li-block">
+        <h3>LinkedIn</h3>
+        <ul>
+          <li>Photo professionnelle en costume ou tenue soignée</li>
+          <li>Fond neutre ou bureau flou</li>
+          <li>Sourire confiant, regard direct</li>
+          <li>Éclairage soigné, cadrage portrait standard</li>
+          <li>Parfois un logo d'entreprise ou une bannière visible</li>
+        </ul>
+      </div>
+      <div class="rule-block int-block">
+        <h3>Interpol</h3>
+        <ul>
+          <li>Photo d'identité judiciaire, fond blanc ou gris uni</li>
+          <li>Expression neutre, regard vers l'objectif</li>
+          <li>Qualité variable, parfois floutée ou ancienne</li>
+          <li>Aucun accessoire de mode particulier</li>
+          <li>Parfois une numérotation ou un carton visible</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top: 3rem;">
+      <div class="section-label">Le système de points</div>
+      <div class="scoring-table">
+        <div class="scoring-row header">
+          <span class="label">Action</span>
+          <span class="points">Points</span>
+        </div>
+        <div class="scoring-row">
+          <span class="label">Bonne réponse dans les 3 premières secondes</span>
+          <span class="points">+3 pts</span>
+        </div>
+        <div class="scoring-row">
+          <span class="label">Bonne réponse (temps normal)</span>
+          <span class="points">+1 pt</span>
+        </div>
+        <div class="scoring-row">
+          <span class="label">Mauvaise réponse</span>
+          <span class="points">0 pt</span>
+        </div>
+        <div class="scoring-row">
+          <span class="label">Bonus : seul à avoir la bonne réponse</span>
+          <span class="points">+2 pts</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIDENTIALITÉ -->
+  <section id="confidentialite">
+    <div class="section-label">Politique de confidentialité</div>
+    <h2 class="section-title">Vos données,<br>notre respect.</h2>
+
+    <div class="privacy-content">
+
+      <div class="privacy-block">
+        <h3>1. Données collectées</h3>
+        <p>LinkedIn ou Interpol ? ne collecte aucune donnée personnelle identifiable. Aucun compte, aucune inscription n'est requise pour jouer. Aucun nom, prénom, adresse email ou numéro de téléphone n'est demandé ni stocké.</p>
+      </div>
+
+      <div class="privacy-block">
+        <h3>2. Cookies et traceurs</h3>
+        <p>Ce site n'utilise pas de cookies publicitaires ni de traceurs tiers. Des cookies fonctionnels strictement nécessaires au bon fonctionnement du jeu (scores en session, préférences de langue) peuvent être utilisés. Ils ne sont jamais transmis à des tiers.</p>
+      </div>
+
+      <div class="privacy-block">
+        <h3>3. Images utilisées</h3>
+        <p>Les images affichées dans le jeu sont soit générées par intelligence artificielle, soit issues de bases de données libres de droits et ne représentent aucune personne réelle identifiable. Aucune photo de personne réelle n'est utilisée sans consentement explicite.</p>
+      </div>
+
+      <div class="privacy-block">
+        <h3>4. Hébergement et sécurité</h3>
+        <p>Le site est hébergé sur des serveurs sécurisés situés dans l'Union européenne, conformément au Règlement Général sur la Protection des Données (RGPD). Toute communication entre votre navigateur et nos serveurs est chiffrée via HTTPS.</p>
+      </div>
+
+      <div class="privacy-block">
+        <h3>5. Données de session</h3>
+        <p>Les scores et pseudonymes de joueurs saisis pendant une partie sont stockés uniquement en mémoire locale (localStorage) de votre navigateur. Ces données ne nous parviennent jamais et sont automatiquement supprimées à la fermeture du jeu.</p>
+      </div>
+
+      <div class="privacy-block">
+        <h3>6. Vos droits</h3>
+        <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement et de portabilité de vos données. Pour toute demande, contactez-nous à : <span style="color: var(--white); font-family: 'DM Mono', monospace;">contact@linkedinoupinterpol.fr</span></p>
+      </div>
+
+      <div class="privacy-block">
+        <h3>7. Mise à jour de cette politique</h3>
+        <p>Cette politique de confidentialité peut être mise à jour à tout moment. La date de dernière mise à jour est indiquée en bas de page. Nous vous invitons à la consulter régulièrement.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 LinkedIn ou Interpol ? — Tous droits réservés</p>
+    <p>Dernière mise à jour : mai 2025 &nbsp;·&nbsp; <a href="#confidentialite">Confidentialité</a> &nbsp;·&nbsp; <a href="mailto:contact@linkedinoupinterpol.fr">Contact</a></p>
+  </footer>
+
+</body>
+</html>
