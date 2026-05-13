@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jouer — LinkedIn ou Interpol ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2eb;
+      --red: #e63329;
+      --blue: #0a66c2;
+      --gray: #b0aa9e;
+      --border: rgba(255,255,255,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 2.5rem;
+      border-bottom: 0.5px solid var(--border);
+    }
+    .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--white); }
+    .nav-logo span.li { color: var(--blue); }
+    .nav-logo span.int { color: var(--red); }
+    .nav-back { font-size: 12px; color: var(--gray); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+    .nav-back:hover { color: var(--white); }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Lueurs de fond */
+    main::before {
+      content: '';
+      position: absolute; top: 20%; left: 15%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,102,194,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    main::after {
+      content: '';
+      position: absolute; bottom: 10%; right: 10%;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(230,51,41,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* TITRE */
+    .page-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gray); margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      animation: fadeUp 0.5s ease both;
+    }
+    .page-label::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--gray); }
+
+    .page-title {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800; line-height: 0.95;
+      letter-spacing: -0.03em; text-align: center;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.5s 0.08s ease both;
+    }
+    .page-title span.li { color: var(--blue); }
+    .page-title span.int { color: var(--red); }
+    .page-title .ou {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic; font-weight: 400;
+      font-size: 0.65em; color: var(--gray);
+    }
+
+    .page-sub {
+      font-size: 15px; color: var(--gray);
+      text-align: center; margin-bottom: 4rem;
+      animation: fadeUp 0.5s 0.16s ease both;
+    }
+
+    /* CARTES MODE */
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 640px;
+      animation: fadeUp 0.5s 0.24s ease both;
+    }
+
+    .mode-card {
+      position: relative;
+      border: 0.5px solid var(--border);
+      border-radius: 6px;
+      padding: 2.5rem 2rem;
+      text-decoration: none;
+      color: var(--white);
+      cursor: pointer;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .mode-card.solo::before { background: var(--blue); }
+    .mode-card.multi::before { background: var(--red); }
+
+    .mode-card:hover {
+      transform: translateY(-4px);
+    }
+    .mode-card.solo:hover { border-color: rgba(10,102,194,0.4); }
+    .mode-card.multi:hover { border-color: rgba(230,51,41,0.4); }
+
+    /* Fond hover subtil */
+    .mode-card.solo:hover { background: rgba(10,102,194,0.04); }
+    .mode-card.multi:hover { background: rgba(230,51,41,0.04); }
+
+    .mode-icon {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .mode-title {
+      font-size: 22px; font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .mode-desc {
+      font-size: 13px; color: var(--gray); line-height: 1.6;
+    }
+
+    .mode-arrow {
+      margin-top: auto;
+      font-size: 20px;
+      color: var(--gray);
+      transition: transform 0.2s, color 0.2s;
+    }
+    .mode-card:hover .mode-arrow { transform: translateX(5px); }
+    .mode-card.solo:hover .mode-arrow { color: var(--blue); }
+    .mode-card.multi:hover .mode-arrow { color: var(--red); }
+
+    /* BIENTOT */
+    .soon-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid var(--border);
+      border-radius: 100px;
+      padding: 3px 10px;
+      color: var(--gray);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 1.5rem 2.5rem;
+      border-top: 0.5px solid var(--border);
+      text-align: center;
+    }
+    footer p { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
+    footer a { color: var(--gray); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    @media (max-width: 560px) {
+      .modes { grid-template-columns: 1fr; }
+      .page-title { font-size: 2.5rem; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="li">Linked</span>In <span style="color:rgba(255,255,255,0.3)">ou</span> <span class="int">Inter</span>pol
+    </a>
+    <a href="index.html" class="nav-back">← Retour à l'accueil</a>
+  </nav>
+
+  <main>
+    <div class="page-label">Choisissez votre mode</div>
+
+    <h1 class="page-title">
+      <span class="li">LinkedIn</span><br>
+      <span class="ou">ou</span><br>
+      <span class="int">Interpol ?</span>
+    </h1>
+
+    <p class="page-sub">Comment voulez-vous jouer ?</p>
+
+    <div class="modes">
+
+      <!-- SOLO -->
+      <a href="#" class="mode-card solo">
+        <div class="mode-icon">🧠</div>
+        <div class="mode-title">Solo</div>
+        <p class="mode-desc">Affrontez le jeu seul. Testez votre instinct, battez votre propre score.</p>
+        <div class="mode-arrow">→</div>
+      </a>
+
+      <!-- MULTI -->
+      <a href="#" class="mode-card multi">
+        <span class="soon-badge">Bientôt</span>
+        <div class="mode-icon">👥</div>
+        <div class="mode-title">Multijoueur</div>
+        <p class="mode-desc">De 2 à 8 joueurs autour d'un écran. Qui sera le meilleur détective ?</p>
+        <div class="mode-arrow">→</div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 LinkedIn ou Interpol ? &nbsp;·&nbsp; <a href="confidentialite.html">Confidentialité</a></p>
+  </footer>
+
+</body>
+</html>
