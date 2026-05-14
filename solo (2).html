@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solo — LinkedIn ou Interpol ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a; --white: #f5f2eb; --red: #e63329;
+      --blue: #0a66c2; --gray: #b0aa9e; --card-bg: #131310;
+      --border: rgba(255,255,255,0.08); --green: #22c55e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--black); color: var(--white); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem; border-bottom: 0.5px solid var(--border);
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(10,10,10,0.9); backdrop-filter: blur(12px);
+    }
+    .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--white); }
+    .nav-logo span.li { color: var(--blue); }
+    .nav-logo span.int { color: var(--red); }
+    .nav-back { font-size: 12px; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .nav-back:hover { color: var(--white); }
+
+    /* SCORE */
+    .scorebar {
+      display: flex; align-items: center; justify-content: center; gap: 2rem;
+      padding: 1rem 2rem; border-bottom: 0.5px solid var(--border);
+      background: var(--card-bg); flex-wrap: wrap;
+    }
+    .score-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .score-val { font-size: 22px; font-weight: 800; font-family: 'DM Mono', monospace; }
+    .score-lbl { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+    .score-item.correct .score-val { color: var(--green); }
+    .score-item.incorrect .score-val { color: var(--red); }
+    .score-sep { width: 1px; height: 32px; background: var(--border); }
+
+    main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 2rem 1.5rem; gap: 1.5rem; }
+
+    .question-counter { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); }
+
+    /* CARTE PHOTO */
+    .photo-card {
+      width: 100%; max-width: 340px; border: 0.5px solid var(--border);
+      border-radius: 8px; overflow: hidden; position: relative; transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .photo-card.reveal-correct  { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+    .photo-card.reveal-linkedin { border-color: var(--blue);  box-shadow: 0 0 0 1px var(--blue); }
+    .photo-card.reveal-interpol { border-color: var(--red);   box-shadow: 0 0 0 1px var(--red); }
+
+    .photo-frame {
+      width: 100%; aspect-ratio: 3/4; background: #1a1a17;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-placeholder { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .photo-placeholder .icon { font-size: 3.5rem; opacity: 0.2; }
+    .photo-placeholder p { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); opacity: 0.4; }
+
+    /* OVERLAY RÉSULTAT */
+    .result-overlay {
+      display: none; position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.1rem 1.25rem; background: rgba(10,10,10,0.97); border-top: 0.5px solid var(--border);
+    }
+    .result-overlay.show { display: block; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    .result-verdict { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 0.3rem; }
+    .result-verdict.correct  { color: var(--green); }
+    .result-verdict.incorrect { color: var(--red); }
+    .result-name { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+    .result-name.linkedin { color: var(--blue); }
+    .result-name.interpol  { color: var(--red); }
+    .result-country { font-size: 11px; color: var(--gray); margin-bottom: 0.6rem; }
+    .result-desc { font-size: 12px; color: var(--gray); line-height: 1.55; margin-bottom: 0.75rem; }
+    .result-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      text-decoration: none; padding: 0.4rem 0.9rem; border-radius: 2px; transition: opacity 0.2s;
+    }
+    .result-link:hover { opacity: 0.75; }
+    .result-link.linkedin { background: var(--blue); color: #fff; }
+    .result-link.interpol  { background: var(--red);  color: #fff; }
+
+    /* BOUTONS VOTE */
+    .vote-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; max-width: 340px; }
+    .vote-btn {
+      padding: 1rem; border-radius: 4px; border: none;
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800;
+      cursor: pointer; transition: transform 0.15s, opacity 0.15s;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .vote-btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .vote-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .vote-btn .btn-icon { font-size: 1.5rem; }
+    .vote-btn.linkedin { background: var(--blue); color: #fff; }
+    .vote-btn.interpol  { background: var(--red);  color: #fff; }
+
+    /* BOUTON SUIVANT */
+    .next-btn {
+      display: none; width: 100%; max-width: 340px; padding: 1rem; border-radius: 4px;
+      background: rgba(255,255,255,0.06); border: 0.5px solid var(--border);
+      color: var(--white); font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+      letter-spacing: 0.08em; cursor: pointer; transition: background 0.2s;
+    }
+    .next-btn.show { display: block; animation: fadeUp 0.3s ease; }
+    .next-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* ÉCRAN FIN */
+    .end-screen { display: none; flex-direction: column; align-items: center; text-align: center; gap: 1.5rem; padding: 2rem; }
+    .end-screen.show { display: flex; animation: fadeUp 0.4s ease; }
+    .end-emoji { font-size: 3rem; }
+    .end-title { font-size: clamp(1.8rem, 7vw, 3.5rem); font-weight: 800; line-height: 1.1; }
+    .end-score { font-family: 'DM Mono', monospace; font-size: 1.1rem; color: var(--gray); }
+    .end-score span { color: var(--white); font-size: 1.4rem; }
+    .restart-btn {
+      padding: 0.9rem 2rem; border-radius: 4px; background: var(--white); color: var(--black);
+      border: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s, transform 0.15s;
+    }
+    .restart-btn:hover { background: #ddd9d1; transform: translateY(-2px); }
+
+    /* PAS DE FICHES */
+    .no-fiches { display: none; flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding: 3rem 2rem; color: var(--gray); }
+    .no-fiches.show { display: flex; }
+    .no-fiches .big { font-size: 3rem; opacity: 0.2; }
+
+    footer { padding: 1.25rem 2rem; border-top: 0.5px solid var(--border); text-align: center; }
+    footer p { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
+    footer a { color: var(--gray); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="li">Linked</span>In <span style="color:rgba(255,255,255,0.25)">ou</span> <span class="int">Inter</span>pol
+    </a>
+    <a href="jouer.html" class="nav-back">← Retour</a>
+  </nav>
+
+  <div class="scorebar">
+    <div class="score-item correct">
+      <span class="score-val" id="sc-correct">0</span>
+      <span class="score-lbl">Réussis</span>
+    </div>
+    <div class="score-sep"></div>
+    <div class="score-item incorrect">
+      <span class="score-val" id="sc-incorrect">0</span>
+      <span class="score-lbl">Ratés</span>
+    </div>
+    <div class="score-sep"></div>
+    <div class="score-item">
+      <span class="score-val" id="sc-total">0 <span style="font-size:13px;color:var(--gray)">(—)</span></span>
+      <span class="score-lbl">Total</span>
+    </div>
+  </div>
+
+  <main>
+
+    <div class="no-fiches" id="no-fiches">
+      <div class="big">📂</div>
+      <p>Aucune fiche disponible.<br>Remplis le fichier <strong>fiches.js</strong> pour commencer !</p>
+    </div>
+
+    <div id="game-area" style="display:none; flex-direction:column; align-items:center; gap:1.5rem; width:100%;">
+
+      <div class="question-counter" id="question-counter">Question 1 / ?</div>
+
+      <div class="photo-card" id="photo-card">
+        <div class="photo-frame" id="photo-frame">
+          <div class="photo-placeholder" id="photo-placeholder">
+            <div class="icon">🖼️</div>
+            <p>Photo à venir</p>
+          </div>
+          <img id="photo-img" src="" alt="Profil" style="display:none" />
+        </div>
+        <div class="result-overlay" id="result-overlay">
+          <div class="result-verdict"  id="result-verdict"></div>
+          <div class="result-name"     id="result-name"></div>
+          <div class="result-country"  id="result-country"></div>
+          <p   class="result-desc"     id="result-desc"></p>
+          <a   class="result-link"     id="result-link" href="#" target="_blank" rel="noopener noreferrer">
+            <span id="result-link-text"></span> ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="vote-buttons">
+        <button class="vote-btn linkedin" id="btn-linkedin" onclick="vote('linkedin')">
+          <span class="btn-icon">💼</span> LinkedIn
+        </button>
+        <button class="vote-btn interpol" id="btn-interpol" onclick="vote('interpol')">
+          <span class="btn-icon">🚨</span> Interpol
+        </button>
+      </div>
+
+      <button class="next-btn" id="next-btn" onclick="nextQuestion()">Question suivante →</button>
+
+    </div>
+
+    <div class="end-screen" id="end-screen">
+      <div class="end-emoji" id="end-emoji">🏆</div>
+      <div class="end-title" id="end-title"></div>
+      <div class="end-score">Score : <span id="end-score-val">—</span></div>
+      <button class="restart-btn" onclick="startGame()">Rejouer →</button>
+      <a href="jouer.html" style="font-size:13px;color:var(--gray);text-decoration:none;">← Changer de mode</a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2025 LinkedIn ou Interpol ? &nbsp;·&nbsp; <a href="confidentialite.html">Confidentialité</a></p>
+  </footer>
+
+  <!-- On charge les fiches depuis le fichier séparé -->
+  <script src="fiches.js"></script>
+  <script>
+    let questions = [], currentIndex = 0, correct = 0, incorrect = 0, answered = false;
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function startGame() {
+      if (!FICHES || FICHES.length === 0) {
+        document.getElementById('no-fiches').classList.add('show');
+        document.getElementById('game-area').style.display = 'none';
+        document.getElementById('end-screen').classList.remove('show');
+        return;
+      }
+      document.getElementById('no-fiches').classList.remove('show');
+      document.getElementById('end-screen').classList.remove('show');
+      document.getElementById('game-area').style.display = 'flex';
+      questions = shuffle(FICHES);
+      currentIndex = 0; correct = 0; incorrect = 0;
+      updateScore();
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      answered = false;
+      const q = questions[currentIndex];
+      document.getElementById('question-counter').textContent =
+        `Question ${currentIndex + 1} / ${questions.length}`;
+
+      const img = document.getElementById('photo-img');
+      const ph  = document.getElementById('photo-placeholder');
+      if (q.photo) {
+        img.src = q.photo;
+        img.style.display = 'block';
+        ph.style.display = 'none';
+        img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+      } else {
+        img.style.display = 'none';
+        ph.style.display = 'flex';
+      }
+
+      document.getElementById('photo-card').className = 'photo-card';
+      document.getElementById('result-overlay').classList.remove('show');
+      document.getElementById('next-btn').classList.remove('show');
+      document.getElementById('btn-linkedin').disabled = false;
+      document.getElementById('btn-interpol').disabled = false;
+    }
+
+    function vote(choice) {
+      if (answered) return;
+      answered = true;
+      const q = questions[currentIndex];
+      const ok = choice === q.type;
+      if (ok) correct++; else incorrect++;
+      updateScore();
+
+      document.getElementById('btn-linkedin').disabled = true;
+      document.getElementById('btn-interpol').disabled = true;
+
+      document.getElementById('photo-card').classList.add(
+        ok ? 'reveal-correct' : (q.type === 'linkedin' ? 'reveal-linkedin' : 'reveal-interpol')
+      );
+
+      document.getElementById('result-verdict').textContent  = ok ? '✓ Correct !' : '✗ Incorrect';
+      document.getElementById('result-verdict').className    = 'result-verdict ' + (ok ? 'correct' : 'incorrect');
+      document.getElementById('result-name').textContent     = q.name;
+      document.getElementById('result-name').className       = 'result-name ' + q.type;
+      document.getElementById('result-country').textContent  = q.country ? '🌍 ' + q.country : '';
+      document.getElementById('result-desc').textContent     = q.desc;
+
+      const link = document.getElementById('result-link');
+      link.href = q.url || '#';
+      link.className = 'result-link ' + q.type;
+      link.style.display = q.url ? 'inline-flex' : 'none';
+      document.getElementById('result-link-text').textContent =
+        q.type === 'linkedin' ? 'Voir le profil LinkedIn' : 'Voir la notice Interpol';
+
+      document.getElementById('result-overlay').classList.add('show');
+
+      const nb = document.getElementById('next-btn');
+      nb.textContent = currentIndex < questions.length - 1 ? 'Question suivante →' : 'Voir mon score →';
+      nb.classList.add('show');
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex >= questions.length) showEnd();
+      else loadQuestion();
+    }
+
+    function showEnd() {
+      document.getElementById('game-area').style.display = 'none';
+      const total = correct + incorrect;
+      const pct   = total > 0 ? Math.round((correct / total) * 100) : 0;
+      document.getElementById('end-score-val').textContent = `${correct} / ${total} (${pct}%)`;
+      let emoji = '😬', title = "Tu embaucherais n'importe qui.";
+      if (pct >= 90) { emoji = '🏆'; title = 'Détective en chef !'; }
+      else if (pct >= 70) { emoji = '🎯'; title = 'Beau sang-froid.'; }
+      else if (pct >= 50) { emoji = '🤔'; title = 'Peut mieux faire.'; }
+      document.getElementById('end-emoji').textContent = emoji;
+      document.getElementById('end-title').textContent = title;
+      document.getElementById('end-screen').classList.add('show');
+    }
+
+    function updateScore() {
+      const total = correct + incorrect;
+      const pct   = total > 0 ? Math.round((correct / total) * 100) : null;
+      document.getElementById('sc-correct').textContent = correct;
+      document.getElementById('sc-incorrect').textContent = incorrect;
+      document.getElementById('sc-total').innerHTML =
+        `${total} <span style="font-size:13px;color:var(--gray)">${pct !== null ? '(' + pct + '%)' : '(—)'}</span>`;
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
