@@ -53,4 +53,24 @@ const FICHES = [
     url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-32624"
   },
 
+ {
+    type:    "interpol",
+    name:    "Harpeet Singh",
+    country: "Inde",
+    photo:   "https://ws-public.interpol.int/notices/v1/red/2025-96607/images/63869425",
+    desc:    "Participation activité criminelle, attaque de l'état indien, obtention d'armes illégales, financement activité criminelle, membre d'un groupe terroriste",
+    url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2025-96607"
+  },
+
+  
+
+  {
+    type:    "interpol",
+    name:    "",
+    country: "",
+    photo:   "",
+    desc:    "",
+    url:     ""
+  },
+
   ];
