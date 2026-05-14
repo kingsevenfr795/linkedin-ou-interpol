@@ -42,4 +42,15 @@ const FICHES = [
   //   url:     ""
   // },
 
-];
+
+
+{
+    type:    "interpol",
+    name:    "Azizbek Toshtemirov",
+    country: "Ouzbékistan",
+    photo:   "https://ws-public.interpol.int/notices/v1/red/2026-32624/images/63902151",
+    desc:    "Fraude",
+    url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-32624"
+  },
+
+  ];
