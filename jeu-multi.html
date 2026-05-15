@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partie — LinkedIn ou Interpol ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a; --white: #f5f2eb; --red: #e63329;
+      --blue: #0a66c2; --gray: #b0aa9e; --card-bg: #131310;
+      --border: rgba(255,255,255,0.08); --green: #22c55e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--black); color: var(--white); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 0.5px solid var(--border); background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
+    .nav-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--white); }
+    .nav-logo span.li { color: var(--blue); }
+    .nav-logo span.int { color: var(--red); }
+    .nav-info { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
+
+    main { flex: 1; display: flex; gap: 1.5rem; padding: 1.5rem; max-width: 960px; margin: 0 auto; width: 100%; }
+    @media (max-width: 700px) { main { flex-direction: column; } }
+
+    /* ── COLONNE GAUCHE : JEU ── */
+    .game-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+
+    /* TIMER */
+    .timer-wrap { width: 100%; max-width: 340px; }
+    .timer-bar-bg { width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .timer-bar-fill { height: 100%; background: var(--white); border-radius: 2px; transition: width 1s linear, background 0.5s; }
+    .timer-bar-fill.danger { background: var(--red); }
+    .timer-number { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gray); text-align: right; margin-top: 4px; }
+
+    .question-counter { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); }
+
+    /* CARTE PHOTO */
+    .photo-card { width: 100%; max-width: 300px; border: 0.5px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; transition: border-color 0.3s, box-shadow 0.3s; }
+    .photo-card.reveal-correct  { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+    .photo-card.reveal-linkedin { border-color: var(--blue);  box-shadow: 0 0 0 1px var(--blue); }
+    .photo-card.reveal-interpol { border-color: var(--red);   box-shadow: 0 0 0 1px var(--red); }
+
+    .photo-frame { width: 100%; aspect-ratio: 3/4; background: #1a1a17; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-placeholder { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .photo-placeholder .icon { font-size: 3rem; opacity: 0.2; }
+
+    .result-overlay { display: none; position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem 1.1rem; background: rgba(10,10,10,0.97); border-top: 0.5px solid var(--border); }
+    .result-overlay.show { display: block; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .result-verdict { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; font-family: 'DM Mono', monospace; margin-bottom: 0.3rem; }
+    .result-verdict.correct { color: var(--green); }
+    .result-verdict.incorrect { color: var(--red); }
+    .result-name { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+    .result-name.linkedin { color: var(--blue); }
+    .result-name.interpol { color: var(--red); }
+    .result-country { font-size: 11px; color: var(--gray); margin-bottom: 0.5rem; }
+    .result-desc { font-size: 11px; color: var(--gray); line-height: 1.5; margin-bottom: 0.65rem; }
+    .result-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; padding: 0.35rem 0.75rem; border-radius: 2px; }
+    .result-link.linkedin { background: var(--blue); color: #fff; }
+    .result-link.interpol { background: var(--red); color: #fff; }
+
+    /* BOUTONS VOTE */
+    .vote-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; max-width: 300px; }
+    .vote-btn { padding: 0.85rem; border-radius: 4px; border: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: transform 0.15s, opacity 0.15s; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .vote-btn:hover:not(:disabled) { transform: translateY(-2px); }
+    .vote-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .vote-btn .btn-icon { font-size: 1.3rem; }
+    .vote-btn.linkedin { background: var(--blue); color: #fff; }
+    .vote-btn.interpol { background: var(--red);  color: #fff; }
+
+    .voted-msg { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--green); display: none; }
+    .voted-msg.show { display: block; animation: fadeUp 0.3s ease; }
+
+    /* MESSAGE TOUT LE MONDE FAUX */
+    .all-wrong-msg {
+      display: none; background: rgba(230,51,41,0.1); border: 0.5px solid var(--red);
+      border-radius: 4px; padding: 0.75rem 1rem; text-align: center;
+      font-size: 13px; color: var(--red); max-width: 300px; width: 100%;
+    }
+    .all-wrong-msg.show { display: block; animation: fadeUp 0.3s ease; }
+
+    /* ── COLONNE DROITE : JOUEURS ── */
+    .players-col { width: 220px; display: flex; flex-direction: column; gap: 1rem; }
+    @media (max-width: 700px) { .players-col { width: 100%; } }
+
+    .players-col-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+    .players-live { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .player-live-row { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.75rem; background: var(--card-bg); border: 0.5px solid var(--border); border-radius: 4px; transition: opacity 0.3s; }
+    .player-live-row.eliminated { opacity: 0.3; text-decoration: line-through; }
+    .player-live-left { display: flex; align-items: center; gap: 0.5rem; }
+    .player-live-name { font-size: 13px; font-weight: 700; }
+    .player-live-name.guest { color: var(--gray); font-weight: 400; font-size: 12px; }
+    .voted-check { font-size: 14px; transition: opacity 0.2s; opacity: 0; }
+    .voted-check.show { opacity: 1; }
+    .player-live-score { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--white); }
+
+    /* ── ÉCRAN FIN ── */
+    #end-screen { display: none; flex-direction: column; align-items: center; text-align: center; gap: 1.5rem; padding: 3rem 2rem; width: 100%; }
+    #end-screen.show { display: flex; animation: fadeUp 0.5s ease; }
+    .end-title { font-size: clamp(1.8rem, 6vw, 3.5rem); font-weight: 800; line-height: 1.1; }
+
+    /* CLASSEMENT */
+    .leaderboard { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 0.5rem; }
+    .lb-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.85rem 1.25rem; border-radius: 4px;
+      background: var(--card-bg); border: 0.5px solid var(--border);
+      animation: fadeUp 0.4s ease both;
+    }
+    .lb-row:nth-child(1) { border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.05); }
+    .lb-row:nth-child(2) { border-color: rgba(192,192,192,0.3); }
+    .lb-row:nth-child(3) { border-color: rgba(205,127,50,0.3); }
+    .lb-rank { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--gray); width: 24px; text-align: center; }
+    .lb-row:nth-child(1) .lb-rank { color: gold; }
+    .lb-row:nth-child(2) .lb-rank { color: silver; }
+    .lb-row:nth-child(3) .lb-rank { color: #cd7f32; }
+    .lb-name { flex: 1; font-size: 15px; font-weight: 700; text-align: left; }
+    .lb-name.guest { color: var(--gray); font-weight: 400; }
+    .lb-score { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: var(--white); }
+
+    .replay-btn { padding: 0.9rem 2rem; border-radius: 4px; background: var(--white); color: var(--black); border: none; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; cursor: pointer; transition: background 0.15s, transform 0.15s; }
+    .replay-btn:hover { background: #ddd9d1; transform: translateY(-2px); }
+
+    footer { padding: 1rem 2rem; border-top: 0.5px solid var(--border); text-align: center; }
+    footer p { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="li">Linked</span>In <span style="color:rgba(255,255,255,0.3)">ou</span> <span class="int">Inter</span>pol
+    </a>
+    <div class="nav-info" id="nav-info">Question 1/?</div>
+  </nav>
+
+  <!-- JEU -->
+  <main id="game-main">
+
+    <div class="game-col">
+
+      <div class="timer-wrap">
+        <div class="timer-bar-bg"><div class="timer-bar-fill" id="timer-fill"></div></div>
+        <div class="timer-number" id="timer-number">10</div>
+      </div>
+
+      <div class="question-counter" id="question-counter">Question 1 / ?</div>
+
+      <div class="photo-card" id="photo-card">
+        <div class="photo-frame">
+          <div class="photo-placeholder" id="photo-placeholder">
+            <div class="icon">🖼️</div>
+          </div>
+          <img id="photo-img" src="" alt="" style="display:none" />
+        </div>
+        <div class="result-overlay" id="result-overlay">
+          <div class="result-verdict"  id="result-verdict"></div>
+          <div class="result-name"     id="result-name"></div>
+          <div class="result-country"  id="result-country"></div>
+          <p   class="result-desc"     id="result-desc"></p>
+          <a   class="result-link"     id="result-link" href="#" target="_blank" rel="noopener">
+            <span id="result-link-text"></span> ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="vote-buttons" id="vote-buttons">
+        <button class="vote-btn linkedin" id="btn-linkedin" onclick="voter('linkedin')">
+          <span class="btn-icon">💼</span> LinkedIn
+        </button>
+        <button class="vote-btn interpol" id="btn-interpol" onclick="voter('interpol')">
+          <span class="btn-icon">🚨</span> Interpol
+        </button>
+      </div>
+
+      <div class="voted-msg" id="voted-msg">✓ Vote enregistré — en attente des autres...</div>
+      <div class="all-wrong-msg" id="all-wrong-msg">😅 Tout le monde s'est trompé !<br>On rejoue ce round...</div>
+
+    </div>
+
+    <!-- JOUEURS EN DIRECT -->
+    <div class="players-col">
+      <div class="players-col-title">Joueurs</div>
+      <div class="players-live" id="players-live"></div>
+    </div>
+
+  </main>
+
+  <!-- FIN -->
+  <div id="end-screen">
+    <div class="end-title">🏁 Partie terminée !</div>
+    <div class="leaderboard" id="leaderboard"></div>
+    <a href="jouer.html" class="replay-btn">Rejouer →</a>
+  </div>
+
+  <footer>
+    <p>© 2025 LinkedIn ou Interpol ?</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="fiches.js"></script>
+  <script>
+    // ============================================================
+    // MÊME CONFIG FIREBASE
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxgCs96QGGHVhAnAufoOfhUVpD6OteRDU",
+      authDomain: "linkedin-ou-interpol.firebaseapp.com",
+      databaseURL: "https://linkedin-ou-interpol-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "linkedin-ou-interpol",
+      storageBucket: "linkedin-ou-interpol.firebasestorage.app",
+      messagingSenderId: "282791773827",
+      appId: "1:282791773827:web:e2bdc60c208dda87737db6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const code     = new URLSearchParams(window.location.search).get('code') || sessionStorage.getItem('roomCode');
+    const playerId = sessionStorage.getItem('playerId');
+    if (!code || !playerId) window.location.href = 'jouer.html';
+
+    let params        = {};
+    let players       = {};
+    let questionIndices = [];
+    let currentQ      = 0;
+    let myVote        = null;
+    let timerInterval = null;
+    let timeLeft      = 10;
+    let revealed      = false;
+    let isEliminated  = false;
+    let isHost        = sessionStorage.getItem('isHost') === 'true';
+
+    // ── INIT ──
+    db.ref(`rooms/${code}`).once('value', snap => {
+      const room = snap.val();
+      params = room.params;
+      questionIndices = room.questionIndices;
+      currentQ = room.currentQuestion || 0;
+      loadQuestion(currentQ);
+    });
+
+    // ── ÉCOUTER LES JOUEURS ──
+    db.ref(`rooms/${code}/players`).on('value', snap => {
+      players = snap.val() || {};
+      renderPlayers();
+    });
+
+    // ── ÉCOUTER LES VOTES DU ROUND ──
+    db.ref(`rooms/${code}/roundVotes`).on('value', snap => {
+      const votes = snap.val() || {};
+      updateVoteChecks(votes);
+
+      const activePlayers = Object.entries(players).filter(([pid, p]) => !p.eliminated);
+      const totalActive = activePlayers.length;
+      const totalVoted = Object.keys(votes).length;
+
+      if (totalVoted >= totalActive && totalActive > 0 && !revealed) {
+        clearInterval(timerInterval);
+        revealAnswer(votes);
+      }
+    });
+
+    // ── ÉCOUTER CHANGEMENT DE QUESTION ──
+    db.ref(`rooms/${code}/currentQuestion`).on('value', snap => {
+      const q = snap.val();
+      if (q !== null && q !== currentQ) {
+        currentQ = q;
+        myVote = null;
+        revealed = false;
+        loadQuestion(q);
+      }
+    });
+
+    // ── ÉCOUTER FIN DE PARTIE ──
+    db.ref(`rooms/${code}/status`).on('value', snap => {
+      if (snap.val() === 'finished') showEnd();
+    });
+
+    // ── CHARGER UNE QUESTION ──
+    function loadQuestion(qIndex) {
+      if (qIndex >= questionIndices.length) return;
+
+      const ficheIndex = questionIndices[qIndex];
+      const fiche = FICHES[ficheIndex];
+
+      document.getElementById('question-counter').textContent = `Question ${qIndex + 1} / ${questionIndices.length}`;
+      document.getElementById('nav-info').textContent = `Question ${qIndex + 1}/${questionIndices.length}`;
+
+      // Photo
+      const img = document.getElementById('photo-img');
+      const ph  = document.getElementById('photo-placeholder');
+      if (fiche.photo) {
+        img.src = fiche.photo; img.style.display = 'block'; ph.style.display = 'none';
+        img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+      } else {
+        img.style.display = 'none'; ph.style.display = 'flex';
+      }
+
+      // Reset UI
+      document.getElementById('photo-card').className = 'photo-card';
+      document.getElementById('result-overlay').classList.remove('show');
+      document.getElementById('voted-msg').classList.remove('show');
+      document.getElementById('all-wrong-msg').classList.remove('show');
+      document.getElementById('btn-linkedin').disabled = isEliminated;
+      document.getElementById('btn-interpol').disabled = isEliminated;
+      myVote = null;
+      revealed = false;
+
+      startTimer();
+    }
+
+    // ── TIMER ──
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = params.timer || 10;
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerUI();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          if (!revealed && isHost) {
+            // L'hôte force la révélation si le timer expire
+            db.ref(`rooms/${code}/roundVotes`).once('value', snap => {
+              revealAnswer(snap.val() || {});
+            });
+          }
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const pct = (timeLeft / (params.timer || 10)) * 100;
+      const fill = document.getElementById('timer-fill');
+      fill.style.width = pct + '%';
+      fill.className = 'timer-bar-fill' + (timeLeft <= 3 ? ' danger' : '');
+      document.getElementById('timer-number').textContent = timeLeft;
+    }
+
+    // ── VOTER ──
+    function voter(choice) {
+      if (myVote || isEliminated || revealed) return;
+      myVote = choice;
+      document.getElementById('btn-linkedin').disabled = true;
+      document.getElementById('btn-interpol').disabled = true;
+      document.getElementById('voted-msg').classList.add('show');
+      db.ref(`rooms/${code}/roundVotes/${playerId}`).set(choice);
+    }
+
+    // ── AFFICHER LES COCHES DE VOTE ──
+    function updateVoteChecks(votes) {
+      Object.keys(players).forEach(pid => {
+        const check = document.getElementById(`check-${pid}`);
+        if (check) check.className = 'voted-check' + (votes[pid] ? ' show' : '');
+      });
+    }
+
+    // ── RÉVÉLER LA RÉPONSE ──
+    async function revealAnswer(votes) {
+      if (revealed) return;
+      revealed = true;
+
+      const ficheIndex = questionIndices[currentQ];
+      const fiche = FICHES[ficheIndex];
+      const correctType = fiche.type;
+
+      // Vérifier si tout le monde s'est trompé
+      const activeVotes = Object.entries(votes).filter(([pid]) => players[pid] && !players[pid].eliminated);
+      const allWrong = activeVotes.length > 0 && activeVotes.every(([, v]) => v !== correctType);
+
+      if (allWrong) {
+        document.getElementById('all-wrong-msg').classList.add('show');
+        // Nettoyer les votes et relancer le même round
+        await db.ref(`rooms/${code}/roundVotes`).remove();
+        setTimeout(async () => {
+          document.getElementById('all-wrong-msg').classList.remove('show');
+          myVote = null; revealed = false;
+          document.getElementById('btn-linkedin').disabled = isEliminated;
+          document.getElementById('btn-interpol').disabled = isEliminated;
+          document.getElementById('voted-msg').classList.remove('show');
+          startTimer();
+        }, 3000);
+        return;
+      }
+
+      // Montrer le résultat
+      const myVoteResult = votes[playerId];
+      const isCorrect = myVoteResult === correctType;
+
+      document.getElementById('photo-card').classList.add(
+        isCorrect ? 'reveal-correct' : (correctType === 'linkedin' ? 'reveal-linkedin' : 'reveal-interpol')
+      );
+
+      document.getElementById('result-verdict').textContent  = myVoteResult ? (isCorrect ? '✓ Correct !' : '✗ Incorrect') : '✗ Pas de vote';
+      document.getElementById('result-verdict').className    = 'result-verdict ' + (isCorrect ? 'correct' : 'incorrect');
+      document.getElementById('result-name').textContent     = fiche.name;
+      document.getElementById('result-name').className       = 'result-name ' + correctType;
+      document.getElementById('result-country').textContent  = fiche.country ? '🌍 ' + fiche.country : '';
+      document.getElementById('result-desc').textContent     = fiche.desc;
+      const link = document.getElementById('result-link');
+      link.href = fiche.url || '#';
+      link.className = 'result-link ' + correctType;
+      link.style.display = fiche.url ? 'inline-flex' : 'none';
+      document.getElementById('result-link-text').textContent = correctType === 'linkedin' ? 'Voir LinkedIn' : 'Voir notice Interpol';
+      document.getElementById('result-overlay').classList.add('show');
+
+      // Mettre à jour les scores dans Firebase (hôte uniquement)
+      if (isHost) {
+        const updates = {};
+        Object.entries(votes).forEach(([pid, vote]) => {
+          if (players[pid] && !players[pid].eliminated) {
+            if (vote === correctType) {
+              updates[`rooms/${code}/players/${pid}/score`] = (players[pid].score || 0) + 1;
+            } else if (params.elimination) {
+              updates[`rooms/${code}/players/${pid}/eliminated`] = true;
+            }
+          }
+        });
+        // Pas de vote = éliminé si mode élimination
+        if (params.elimination) {
+          Object.entries(players).forEach(([pid, p]) => {
+            if (!p.eliminated && !votes[pid]) {
+              updates[`rooms/${code}/players/${pid}/eliminated`] = true;
+            }
+          });
+        }
+        await db.ref().update(updates);
+
+        // Nettoyer les votes
+        await db.ref(`rooms/${code}/roundVotes`).remove();
+
+        // Passer à la question suivante après 4 secondes
+        setTimeout(async () => {
+          const nextQ = currentQ + 1;
+          if (nextQ >= questionIndices.length) {
+            await db.ref(`rooms/${code}/status`).set('finished');
+          } else {
+            await db.ref(`rooms/${code}/currentQuestion`).set(nextQ);
+          }
+        }, 4000);
+      }
+
+      // Vérifier si je suis éliminé
+      if (params.elimination && !isCorrect) {
+        isEliminated = true;
+      }
+    }
+
+    // ── AFFICHER LES JOUEURS ──
+    function renderPlayers() {
+      const container = document.getElementById('players-live');
+      const showScores = params.showScores !== false;
+      container.innerHTML = Object.entries(players)
+        .sort((a, b) => (b[1].score || 0) - (a[1].score || 0))
+        .map(([pid, p]) => `
+          <div class="player-live-row ${p.eliminated ? 'eliminated' : ''}">
+            <div class="player-live-left">
+              <span class="voted-check" id="check-${pid}">✅</span>
+              <span class="player-live-name ${p.isGuest ? 'guest' : ''}">${p.name}</span>
+            </div>
+            <span class="player-live-score">${showScores ? (p.score || 0) + ' pt' : '—'}</span>
+          </div>
+        `).join('');
+    }
+
+    // ── ÉCRAN FIN ──
+    function showEnd() {
+      document.getElementById('game-main').style.display = 'none';
+      const end = document.getElementById('end-screen');
+      end.classList.add('show');
+
+      const sorted = Object.entries(players).sort((a, b) => (b[1].score || 0) - (a[1].score || 0));
+      const medals = ['🥇', '🥈', '🥉'];
+
+      document.getElementById('leaderboard').innerHTML = sorted.map(([pid, p], i) => `
+        <div class="lb-row" style="animation-delay:${i * 0.1}s">
+          <div class="lb-rank">${medals[i] || (i + 1)}</div>
+          <div class="lb-name ${p.isGuest ? 'guest' : ''}">${p.name}</div>
+          <div class="lb-score">${p.score || 0} pt${(p.score || 0) > 1 ? 's' : ''}</div>
+        </div>
+      `).join('');
+
+      // Nettoyer la salle Firebase
+      db.ref(`rooms/${code}`).remove();
+      sessionStorage.clear();
+    }
+  </script>
+</body>
+</html>
