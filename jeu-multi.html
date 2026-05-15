@@ -237,12 +237,25 @@
     let isHost        = sessionStorage.getItem('isHost') === 'true';
 
     // ── INIT ──
-    db.ref(`rooms/${code}`).once('value', snap => {
+    db.ref(`rooms/${code}`).once('value', async snap => {
       const room = snap.val();
       if(!room) return;
       params = room.params || {};
       questionIndices = room.questionIndices || [];
       currentQ = room.currentQuestion || 0;
+
+      // SÉCURITÉ ABSOLUE : Si le joueur actuel (l'hôte ou un joueur secondaire) n'est pas présent dans l'objet des joueurs, on l'y injecte directement
+      const currentPlayers = room.players || {};
+      if (!currentPlayers[playerId]) {
+        const pName = sessionStorage.getItem('playerName') || (isHost ? "Hôte" : "Joueur 2");
+        await db.ref(`rooms/${code}/players/${playerId}`).set({
+          name: pName,
+          score: 0,
+          eliminated: false,
+          isGuest: !isHost
+        });
+      }
+
       loadQuestion(currentQ);
     });
 
@@ -255,7 +268,7 @@
       }
     });
 
-    // ── ÉCOUTER LES VOTES DU ROUND (CORRIGÉ) ──
+    // ── ÉCOUTER LES VOTES DU ROUND ──
     db.ref(`rooms/${code}/roundVotes`).on('value', snap => {
       const votes = snap.val() || {};
       updateVoteChecks(votes);
@@ -366,7 +379,7 @@
       });
     }
 
-    // ── RÉVÉLER LA RÉPONSE (CORRIGÉ) ──
+    // ── RÉVÉLER LA RÉPONSE ──
     async function revealAnswer(votes) {
       if (revealed) return;
       revealed = true;
@@ -478,7 +491,7 @@
         `).join('');
     }
 
-    // ── ÉCRAN FIN (CORRIGÉ ET STRUCTURÉ POUR 2 JOUEURS) ──
+    // ── ÉCRAN FIN ──
     function showEnd() {
       clearInterval(timerInterval);
       document.getElementById('game-main').style.display = 'none';
