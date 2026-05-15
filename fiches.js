@@ -312,103 +312,67 @@ const FICHES = [
     url:     "https://www.linkedin.com/in/chua-chenghe-913905277/"
   },
 
-  {
+     {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Gneli Onsou",
+    country: "Tchad",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFeZZTpforGZw/profile-displayphoto-shrink_800_800/B56ZN7b4laG4Ac-/0/1732942729448?e=1780531200&v=beta&t=s01rGnHaa8Rs-_3p8YANTo8GhnP8ptcCmhhT_cPz690",
+    desc:    "Actuellement au chomage",
+    url:     "https://www.linkedin.com/in/gneli-onsou-a2351833b/"
   },
 
     {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Abdelhamid fenniri",
+    country: "Maroc",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFXOVJlKe6TmA/profile-displayphoto-shrink_800_800/B4EZSYPEajGgAc-/0/1737720875929?e=1780531200&v=beta&t=KyW_rafHLqrgYxUC-4nc__ANzTFTaCfVQ0SxlL27fgg",
+    desc:    "Chef BRICOMA",
+    url:     "https://www.linkedin.com/in/abdelhamid-fenniri-28223b116/"
   },
 
     {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Mustapha Swinga",
+    country: "Maroc",
+    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQHLVdClu7L-Nw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1574889441975?e=1780531200&v=beta&t=-cHX_wW0ZoOtl6JCVAEp5xH-dVW1gc-2l5s82x2WRAM",
+    desc:    "Réalisateur & Directeur Créatif",
+    url:     "https://www.linkedin.com/in/mustaphaswinga/"
   },
 
     {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Yomi (le goat) Denzel",
+    country: "Suisse",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E35AQF3CSuBqIh2vA/profile-framedphoto-shrink_800_800/B4EZqnHNoiGYAg-/0/1763740277589?e=1779469200&v=beta&t=qC8D3vRu4UUOg392uSOylHwUJ9SXGD64CoeHKESeqi0",
+    desc:    "Building products, brands and teams",
+    url:     "https://www.linkedin.com/in/yomi-denzel-471934184/"
   },
 
      {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Foreman Kandakada",
+    country: "Inde",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFkGxGRZ_cOeQ/profile-displayphoto-crop_800_800/B4EZ2fUHeDIwAI-/0/1776494349370?e=1780531200&v=beta&t=H_HwaeEH-GbuvRgnHgNK2gtdYU4X7FE9jzgcEBhzOz0",
+    desc:    "Chomage",
+    url:     "https://www.linkedin.com/in/foreman-kandakanda-440108404/"
   },
 
     {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "S. Vigneshwaran",
+    country: "Inde (butter chicken)",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQEei_R8QnNpkA/profile-displayphoto-crop_800_800/B56ZpduxVEJsAI-/0/1762509151659?e=1780531200&v=beta&t=CByJjihAPyU7IpLhwKj5gPp9dEhCCITDRDZtwf3nPjo",
+    desc:    "HR Recruiter",
+    url:     "https://www.linkedin.com/in/vigneshwaran-s-a864582aa/"
   },
 
     {
     type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
-  },
-
-    {
-    type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
-  },
-
-     {
-    type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
-  },
-
-    {
-    type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
-  },
-
-    {
-    type:    "linkedin",
-    name:    "Non disponible",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Alagesan Mohanraj",
+    country: "Inde",
+    photo:   "https://media.licdn.com/dms/image/v2/C5103AQHi-39BScKYQA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1586755617290?e=1780531200&v=beta&t=DgRvsqnFP6icia34v303YNHWeeOlCNhXNUEZ27Oy89o",
+    desc:    "CEO  at NEXXGEN GLOBAL MACHINE TOOLS",
+    url:     "https://www.linkedin.com/in/alagesan-mohanraj-094774121/"
   },
 
     {
