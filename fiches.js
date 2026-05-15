@@ -90,8 +90,8 @@ const FICHES = [
     name:    "Ahmed Soumahoro",
     country: "Côte d'ivoire (Jeremy)",
     photo:   "https://ws-public.interpol.int/notices/v1/red/2026-5819/images/63791099",
-    desc:    "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-5819",
-    url:     "Meurtre"
+    desc:    "Meutre",
+    url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-5819"
   },
 
    {
