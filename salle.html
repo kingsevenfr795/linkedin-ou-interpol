@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salle d'attente — LinkedIn ou Interpol ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a; --white: #f5f2eb; --red: #e63329;
+      --blue: #0a66c2; --gray: #b0aa9e; --card-bg: #131310;
+      --border: rgba(255,255,255,0.08); --green: #22c55e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--black); color: var(--white); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2.5rem; border-bottom: 0.5px solid var(--border); background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
+    .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--white); }
+    .nav-logo span.li { color: var(--blue); }
+    .nav-logo span.int { color: var(--red); }
+    .nav-quit { font-size: 12px; color: var(--gray); text-decoration: none; transition: color 0.2s; cursor: pointer; background: none; border: none; font-family: 'Syne', sans-serif; }
+    .nav-quit:hover { color: var(--red); }
+
+    main { flex: 1; display: grid; grid-template-columns: 1fr 320px; gap: 0; max-width: 960px; margin: 0 auto; width: 100%; padding: 2rem; gap: 2rem; }
+    @media (max-width: 700px) { main { grid-template-columns: 1fr; } }
+
+    /* CODE SALLE */
+    .room-code-block { text-align: center; margin-bottom: 2rem; }
+    .room-code-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem; }
+    .room-code {
+      font-family: 'DM Mono', monospace; font-size: 3rem; font-weight: 500;
+      letter-spacing: 0.35em; color: var(--white);
+      background: var(--card-bg); border: 0.5px solid var(--border);
+      border-radius: 8px; padding: 1rem 1.5rem; display: inline-block;
+      cursor: pointer; transition: border-color 0.2s;
+      position: relative;
+    }
+    .room-code:hover { border-color: rgba(255,255,255,0.2); }
+    .copy-hint { font-size: 11px; color: var(--gray); margin-top: 0.5rem; opacity: 0.6; }
+    .copy-ok { font-size: 11px; color: var(--green); margin-top: 0.5rem; display: none; }
+
+    /* JOUEURS */
+    .section-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray); margin-bottom: 1rem; }
+
+    .players-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
+    .player-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--card-bg); border: 0.5px solid var(--border);
+      border-radius: 4px; padding: 0.75rem 1rem;
+      animation: fadeUp 0.3s ease both;
+    }
+    .player-left { display: flex; align-items: center; gap: 0.75rem; }
+    .player-avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .player-name { font-size: 14px; font-weight: 700; }
+    .player-name.guest { color: var(--gray); font-weight: 400; }
+    .player-badge { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(10,102,194,0.15); color: var(--blue); padding: 2px 8px; border-radius: 100px; }
+    .kick-btn { background: none; border: none; color: var(--gray); cursor: pointer; font-size: 16px; transition: color 0.2s; padding: 4px; }
+    .kick-btn:hover { color: var(--red); }
+
+    .waiting-msg { font-size: 13px; color: var(--gray); text-align: center; padding: 1rem; font-style: italic; }
+
+    /* PANNEAU DROIT */
+    .right-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .params-block { background: var(--card-bg); border: 0.5px solid var(--border); border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .param-row { display: flex; flex-direction: column; gap: 0.5rem; }
+    .param-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); }
+
+    /* SLIDER PARAMS */
+    .slider-display-sm { font-family: 'DM Mono', monospace; font-size: 1.4rem; font-weight: 500; color: var(--white); }
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 3px; border-radius: 2px; background: var(--border); outline: none; cursor: pointer; }
+    input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--white); cursor: pointer; }
+    input[type=range]:disabled { opacity: 0.3; cursor: not-allowed; }
+    input[type=range]:disabled::-webkit-slider-thumb { cursor: not-allowed; }
+
+    /* TIMER OPTIONS */
+    .timer-opts { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .timer-opt {
+      padding: 0.4rem 0.9rem; border-radius: 2px; border: 0.5px solid var(--border);
+      background: transparent; color: var(--gray); font-family: 'DM Mono', monospace;
+      font-size: 13px; cursor: pointer; transition: all 0.15s;
+    }
+    .timer-opt.active { background: var(--white); color: var(--black); border-color: var(--white); }
+    .timer-opt:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* TOGGLE */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; }
+    .toggle-label-text { font-size: 13px; color: var(--white); }
+    .toggle { position: relative; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: rgba(255,255,255,0.1); border-radius: 100px; cursor: pointer; transition: background 0.2s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: var(--white); border-radius: 50%; transition: transform 0.2s; }
+    .toggle input:checked + .toggle-slider { background: var(--green); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+    .toggle input:disabled + .toggle-slider { opacity: 0.3; cursor: not-allowed; }
+
+    /* BOUTON LANCER */
+    .launch-btn {
+      width: 100%; padding: 1.1rem; border-radius: 4px;
+      background: var(--white); color: var(--black); border: none;
+      font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800;
+      letter-spacing: 0.04em; cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .launch-btn:hover:not(:disabled) { background: #ddd9d1; transform: translateY(-2px); }
+    .launch-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    .launch-hint { font-size: 11px; color: var(--gray); text-align: center; }
+
+    footer { padding: 1.25rem 2rem; border-top: 0.5px solid var(--border); text-align: center; }
+    footer p { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="li">Linked</span>In <span style="color:rgba(255,255,255,0.3)">ou</span> <span class="int">Inter</span>pol
+    </a>
+    <button class="nav-quit" onclick="quitter()">Quitter la salle ✕</button>
+  </nav>
+
+  <main>
+
+    <!-- PANNEAU GAUCHE : CODE + JOUEURS -->
+    <div class="left-panel">
+
+      <div class="room-code-block">
+        <div class="room-code-label">Code de la salle</div>
+        <div class="room-code" id="room-code-display" onclick="copierCode()">——————</div>
+        <div class="copy-hint">Cliquez pour copier</div>
+        <div class="copy-ok" id="copy-ok">✓ Copié !</div>
+      </div>
+
+      <div class="section-title" id="players-count">Joueurs (0/8)</div>
+      <div class="players-list" id="players-list">
+        <div class="waiting-msg">En attente de joueurs...</div>
+      </div>
+
+    </div>
+
+    <!-- PANNEAU DROIT : PARAMÈTRES + LANCER -->
+    <div class="right-panel">
+
+      <div class="params-block">
+        <div class="section-title">Paramètres</div>
+
+        <!-- Nombre de questions -->
+        <div class="param-row">
+          <div class="param-label">Nombre de questions</div>
+          <div class="slider-display-sm" id="q-display">10</div>
+          <input type="range" id="q-slider" min="1" max="20" value="10"
+                 oninput="updateParam('questions', this.value)" />
+        </div>
+
+        <!-- Timer -->
+        <div class="param-row">
+          <div class="param-label">Timer par question</div>
+          <div class="timer-opts" id="timer-opts">
+            <button class="timer-opt" onclick="setTimer(5)">5s</button>
+            <button class="timer-opt active" onclick="setTimer(10)">10s</button>
+            <button class="timer-opt" onclick="setTimer(15)">15s</button>
+            <button class="timer-opt" onclick="setTimer(20)">20s</button>
+          </div>
+        </div>
+
+        <!-- Mode élimination -->
+        <div class="param-row">
+          <div class="toggle-row">
+            <span class="toggle-label-text">Mode élimination</span>
+            <label class="toggle">
+              <input type="checkbox" id="toggle-elim" onchange="updateParam('elimination', this.checked)" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Scores visibles -->
+        <div class="param-row">
+          <div class="toggle-row">
+            <span class="toggle-label-text">Scores visibles entre rounds</span>
+            <label class="toggle">
+              <input type="checkbox" id="toggle-scores" checked onchange="updateParam('showScores', this.checked)" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button class="launch-btn" id="launch-btn" onclick="lancerPartie()" disabled>
+        Lancer la partie →
+      </button>
+      <div class="launch-hint" id="launch-hint">Minimum 2 joueurs pour lancer</div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2025 LinkedIn ou Interpol ?</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="fiches.js"></script>
+  <script>
+    // ============================================================
+    // MÊME CONFIG FIREBASE QUE multijoueur.html
+    // ============================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDxgCs96QGGHVhAnAufoOfhUVpD6OteRDU",
+      authDomain: "linkedin-ou-interpol.firebaseapp.com",
+      databaseURL: "https://linkedin-ou-interpol-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "linkedin-ou-interpol",
+      storageBucket: "linkedin-ou-interpol.firebasestorage.app",
+      messagingSenderId: "282791773827",
+      appId: "1:282791773827:web:e2bdc60c208dda87737db6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Récupérer infos session
+    const code      = new URLSearchParams(window.location.search).get('code') || sessionStorage.getItem('roomCode');
+    const playerId  = sessionStorage.getItem('playerId');
+    const isHost    = sessionStorage.getItem('isHost') === 'true';
+
+    if (!code || !playerId) window.location.href = 'multijoueur.html';
+
+    document.getElementById('room-code-display').textContent = code;
+
+    // Désactiver les contrôles si pas hôte
+    if (!isHost) {
+      document.getElementById('q-slider').disabled = true;
+      document.querySelectorAll('.timer-opt').forEach(b => b.disabled = true);
+      document.getElementById('toggle-elim').disabled = true;
+      document.getElementById('toggle-scores').disabled = true;
+      document.getElementById('launch-btn').style.display = 'none';
+      document.getElementById('launch-hint').textContent = "En attente que l'hôte lance la partie...";
+    }
+
+    // Écouter les joueurs en temps réel
+    db.ref(`rooms/${code}/players`).on('value', snap => {
+      const players = snap.val() || {};
+      const list = Object.entries(players);
+      const count = list.length;
+
+      document.getElementById('players-count').textContent = `Joueurs (${count}/8)`;
+
+      const container = document.getElementById('players-list');
+      if (count === 0) {
+        container.innerHTML = '<div class="waiting-msg">En attente de joueurs...</div>';
+        return;
+      }
+
+      container.innerHTML = list.map(([pid, p]) => `
+        <div class="player-row" id="row-${pid}">
+          <div class="player-left">
+            <div class="player-avatar">${p.isGuest ? '👤' : '⭐'}</div>
+            <div>
+              <div class="player-name ${p.isGuest ? 'guest' : ''}">${p.name}</div>
+            </div>
+            ${pid === (snap.ref.parent ? '' : '') ? '' : ''}
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            ${isHost && pid !== playerId ? `<button class="kick-btn" onclick="virer('${pid}')" title="Virer">✕</button>` : ''}
+            ${list[0][0] === pid ? '<span class="player-badge">Hôte</span>' : ''}
+          </div>
+        </div>
+      `).join('');
+
+      // Activer/désactiver bouton lancer
+      if (isHost) {
+        const btn = document.getElementById('launch-btn');
+        const hint = document.getElementById('launch-hint');
+        if (count >= 2) {
+          btn.disabled = false;
+          hint.textContent = `${count} joueur${count > 1 ? 's' : ''} prêt${count > 1 ? 's' : ''} — Lancez quand vous voulez !`;
+        } else {
+          btn.disabled = true;
+          hint.textContent = 'Minimum 2 joueurs pour lancer';
+        }
+      }
+    });
+
+    // Écouter le status de la salle (si l'hôte lance)
+    db.ref(`rooms/${code}/status`).on('value', snap => {
+      if (snap.val() === 'playing') {
+        window.location.href = `jeu-multi.html?code=${code}`;
+      }
+    });
+
+    // Mettre à jour les paramètres (hôte uniquement)
+    function updateParam(key, value) {
+      if (!isHost) return;
+      const val = key === 'questions' ? parseInt(value) : value;
+      db.ref(`rooms/${code}/params/${key}`).set(val);
+      if (key === 'questions') document.getElementById('q-display').textContent = value;
+    }
+
+    function setTimer(val) {
+      if (!isHost) return;
+      document.querySelectorAll('.timer-opt').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      db.ref(`rooms/${code}/params/timer`).set(val);
+    }
+
+    // Virer un joueur
+    async function virer(pid) {
+      if (!isHost) return;
+      await db.ref(`rooms/${code}/players/${pid}`).remove();
+      await db.ref(`rooms/${code}/kicked/${pid}`).set(true);
+    }
+
+    // Vérifier si on est viré
+    db.ref(`rooms/${code}/kicked/${playerId}`).on('value', snap => {
+      if (snap.val()) {
+        alert('Vous avez été exclu de la salle.');
+        window.location.href = 'multijoueur.html';
+      }
+    });
+
+    // Lancer la partie
+    async function lancerPartie() {
+      if (!isHost) return;
+      const snap = await db.ref(`rooms/${code}/players`).once('value');
+      const count = Object.keys(snap.val() || {}).length;
+      if (count < 2) return;
+
+      // Préparer les questions (indices aléatoires dans FICHES)
+      const paramsSnap = await db.ref(`rooms/${code}/params`).once('value');
+      const params = paramsSnap.val();
+      const nb = Math.min(params.questions, FICHES.length);
+      const indices = shuffle([...Array(FICHES.length).keys()]).slice(0, nb);
+
+      await db.ref(`rooms/${code}`).update({
+        status: 'playing',
+        questionIndices: indices,
+        currentQuestion: 0,
+        roundVotes: {}
+      });
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // Copier le code
+    function copierCode() {
+      navigator.clipboard.writeText(code).then(() => {
+        document.querySelector('.copy-hint').style.display = 'none';
+        document.getElementById('copy-ok').style.display = 'block';
+        setTimeout(() => {
+          document.querySelector('.copy-hint').style.display = 'block';
+          document.getElementById('copy-ok').style.display = 'none';
+        }, 2000);
+      });
+    }
+
+    // Quitter
+    async function quitter() {
+      await db.ref(`rooms/${code}/players/${playerId}`).remove();
+      sessionStorage.clear();
+      window.location.href = 'jouer.html';
+    }
+
+    // Nettoyage si on ferme la page
+    window.addEventListener('beforeunload', () => {
+      db.ref(`rooms/${code}/players/${playerId}`).remove();
+    });
+  </script>
+</body>
+</html>
