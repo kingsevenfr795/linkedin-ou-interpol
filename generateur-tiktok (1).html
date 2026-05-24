@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur TikTok — LinkedIn ou Interpol ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0a0a; color: #f5f2eb;
+      font-family: 'Syne', sans-serif;
+      display: flex; gap: 2rem;
+      padding: 2rem; min-height: 100vh;
+    }
+
+    .panel {
+      width: 280px; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .panel-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #b0aa9e;
+      padding-bottom: 1rem; border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    }
+    .field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .field label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #b0aa9e; }
+    .field input, .field select {
+      background: #131310; border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 4px; padding: 0.65rem 0.9rem;
+      color: #f5f2eb; font-family: 'Syne', sans-serif; font-size: 13px;
+      outline: none; transition: border-color 0.2s; width: 100%;
+    }
+    .field input:focus, .field select:focus { border-color: rgba(255,255,255,0.25); }
+    .field select option { background: #1a1a17; }
+
+    .btn-row { display: flex; gap: 0.5rem; }
+    .generate-btn {
+      flex: 1; padding: 1rem; border-radius: 4px;
+      background: #f5f2eb; color: #0a0a0a; border: none;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+      letter-spacing: 0.06em; cursor: pointer;
+      transition: background 0.15s, transform 0.15s, opacity 0.15s;
+    }
+    .generate-btn:hover:not(:disabled) { background: #ddd9d1; transform: translateY(-2px); }
+    .generate-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .fullscreen-btn {
+      padding: 1rem; border-radius: 4px;
+      background: transparent; color: #f5f2eb;
+      border: 0.5px solid rgba(255,255,255,0.15);
+      font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .fullscreen-btn:hover { background: rgba(255,255,255,0.06); }
+
+    .cooldown-msg {
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      color: #b0aa9e; text-align: center; display: none;
+      letter-spacing: 0.1em;
+    }
+    .cooldown-msg.show { display: block; }
+
+    .volume-row {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .volume-row label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #b0aa9e; white-space: nowrap; }
+    .volume-row input[type=range] {
+      flex: 1; height: 3px; border-radius: 2px;
+      background: rgba(255,255,255,0.1); outline: none; cursor: pointer;
+      -webkit-appearance: none;
+    }
+    .volume-row input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px;
+      border-radius: 50%; background: #f5f2eb; cursor: pointer;
+    }
+
+    .hint {
+      font-size: 11px; color: #b0aa9e; line-height: 1.5;
+      background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,255,255,0.06);
+      border-radius: 4px; padding: 0.75rem;
+    }
+
+    .preview-wrap {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .preview-label {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #b0aa9e;
+      align-self: flex-start;
+    }
+
+    .tiktok-frame {
+      width: 360px; height: 640px;
+      position: relative; overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+
+    .bg-split {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, #0a3d6b 0%, #061e35 48%, #3d0a07 52%, #7a1510 100%);
+      z-index: 0;
+    }
+    .bg-split::after {
+      content: ''; position: absolute; top: 0; bottom: 0;
+      left: 50%; width: 2px; background: rgba(255,255,255,0.15);
+      transform: translateX(-50%);
+    }
+
+    .reveal-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      opacity: 0; transition: opacity 0.6s;
+    }
+    .reveal-overlay.linkedin { background: linear-gradient(135deg, rgba(10,102,194,0.7) 0%, rgba(4,63,120,0.9) 100%); }
+    .reveal-overlay.interpol { background: linear-gradient(135deg, rgba(156,28,22,0.7) 0%, rgba(90,12,8,0.9) 100%); }
+
+    .site-watermark {
+      position: absolute; top: 16px; left: 0; right: 0;
+      text-align: center; z-index: 10;
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      letter-spacing: 0.15em; color: rgba(255,255,255,0.25);
+    }
+
+    .tiktok-question {
+      position: absolute; top: 45px; left: 0; right: 0;
+      text-align: center; z-index: 10; padding: 0 20px;
+      opacity: 0; transform: translateY(-15px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .tiktok-question .q-text { font-size: 20px; font-weight: 900; letter-spacing: -0.01em; color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+    .tiktok-question .q-li { color: #5ba3f5; }
+    .tiktok-question .q-ou { color: rgba(255,255,255,0.5); font-size: 16px; }
+    .tiktok-question .q-int { color: #ff6b63; }
+    .tiktok-question .q-sub { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    .tiktok-photo {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 230px; height: 290px; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 2px rgba(255,255,255,0.1);
+      opacity: 0; transition: opacity 0.5s, transform 0.5s, top 0.6s; z-index: 10;
+    }
+    .tiktok-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tiktok-photo .photo-placeholder { width: 100%; height: 100%; background: #2a2a27; display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.3; }
+
+    .tiktok-timer {
+      position: absolute; bottom: 180px; left: 50%;
+      transform: translateX(-50%); z-index: 20; opacity: 0; transition: opacity 0.3s;
+    }
+    .timer-circle {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; font-weight: 900; color: #fff;
+      font-family: 'DM Mono', monospace; position: relative;
+    }
+    .timer-ring { position: absolute; inset: -2px; border-radius: 50%; border: 2px solid transparent; border-top-color: #fff; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .tiktok-reveal {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 40px 24px 36px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.92) 35%);
+      z-index: 20; opacity: 0; transform: translateY(30px);
+      transition: opacity 0.5s, transform 0.5s; text-align: center;
+    }
+    .reveal-verdict { font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 6px; }
+    .reveal-name { font-size: 26px; font-weight: 900; letter-spacing: -0.02em; color: #fff; margin-bottom: 6px; text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+    .reveal-type { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; border-radius: 100px; }
+    .reveal-type.linkedin { color: #fff; background: rgba(10,102,194,0.5); border: 1px solid rgba(91,163,245,0.4); }
+    .reveal-type.interpol { color: #fff; background: rgba(230,51,41,0.5); border: 1px solid rgba(255,107,99,0.4); }
+    .reveal-cta { font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.12em; color: rgba(255,255,255,0.4); }
+    .reveal-cta span { color: rgba(255,255,255,0.8); }
+
+    .instructions { width: 360px; background: #131310; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; }
+    .instructions p { font-size: 11px; color: #b0aa9e; line-height: 1.6; }
+    .instructions strong { color: #f5f2eb; }
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <div class="panel-title">🎬 Générateur TikTok</div>
+
+    <div class="field">
+      <label>URL de la photo</label>
+      <input type="url" id="f-photo" placeholder="https://..." />
+    </div>
+
+    <div class="field">
+      <label>Nom de la personne</label>
+      <input type="text" id="f-name" placeholder="Prénom Nom" />
+    </div>
+
+    <div class="field">
+      <label>C'était...</label>
+      <select id="f-type">
+        <option value="linkedin">💼 LinkedIn</option>
+        <option value="interpol">🚨 Interpol</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Durée décompte</label>
+      <select id="f-timer">
+        <option value="3">3 secondes</option>
+        <option value="5" selected>5 secondes</option>
+        <option value="7">7 secondes</option>
+        <option value="10">10 secondes</option>
+      </select>
+    </div>
+
+    <div class="volume-row">
+      <label>🔊 Volume</label>
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="0.7" />
+    </div>
+
+    <div class="btn-row">
+      <button class="generate-btn" id="generate-btn" onclick="lancer()">▶ Lancer</button>
+      <button class="fullscreen-btn" onclick="pleinEcran()" title="Plein écran">⛶</button>
+    </div>
+
+    <div class="cooldown-msg" id="cooldown-msg">⏳ Lancement dans 3 secondes...</div>
+
+    <div class="hint">
+      💡 Clique <strong>⛶</strong> pour le plein écran, puis <strong>Windows + G</strong> pour screen-record.
+    </div>
+  </div>
+
+  <div class="preview-wrap">
+    <div class="preview-label">Aperçu TikTok (9:16)</div>
+
+    <div class="tiktok-frame" id="frame">
+      <div class="bg-split"></div>
+      <div class="reveal-overlay" id="reveal-overlay"></div>
+      <div class="site-watermark">linkedin-ou-interpol.fun</div>
+
+      <div class="tiktok-question" id="tiktok-question">
+        <div class="q-text">
+          <span class="q-li">LinkedIn</span>
+          <span class="q-ou"> ou </span>
+          <span class="q-int">Interpol</span>
+          <span> ?</span>
+        </div>
+        <div class="q-sub">À toi de deviner</div>
+      </div>
+
+      <div class="tiktok-photo" id="tiktok-photo">
+        <div class="photo-placeholder" id="photo-placeholder">🖼️</div>
+        <img id="photo-img" src="" alt="" style="display:none" />
+      </div>
+
+      <div class="tiktok-timer" id="tiktok-timer">
+        <div class="timer-circle">
+          <div class="timer-ring"></div>
+          <span id="timer-num">5</span>
+        </div>
+      </div>
+
+      <div class="tiktok-reveal" id="tiktok-reveal">
+        <div class="reveal-verdict">C'était...</div>
+        <div class="reveal-name" id="reveal-name">Prénom Nom</div>
+        <div class="reveal-type" id="reveal-type">💼 LinkedIn</div>
+        <div class="reveal-cta">Joue sur <span>linkedin-ou-interpol.fun</span></div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <p><strong>Screen-record :</strong> Windows → <strong>Win + G</strong> &nbsp;|&nbsp; Mac → <strong>Cmd + Shift + 5</strong><br>
+      En plein écran, sélectionne juste le cadre pour un rendu parfait !</p>
+    </div>
+  </div>
+
+<script>
+  let timerInterval = null;
+
+  // ── WEB AUDIO API — sons générés sans fichier externe ──
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  function getVolume() {
+    return parseFloat(document.getElementById('volume').value);
+  }
+
+  // Tick à chaque seconde du décompte
+  function playTick() {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.08);
+    gain.gain.setValueAtTime(getVolume() * 0.4, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + 0.1);
+  }
+
+  // Son LinkedIn — mélodie positive ascendante
+  function playLinkedIn() {
+    const notes = [523, 659, 784, 1047];
+    notes.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+      gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.1);
+      gain.gain.linearRampToValueAtTime(getVolume() * 0.3, audioCtx.currentTime + i * 0.1 + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.3);
+      osc.start(audioCtx.currentTime + i * 0.1);
+      osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+    });
+  }
+
+  // Son Interpol — sirène d'alarme grave
+  function playInterpol() {
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.3);
+    osc1.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.6);
+    osc1.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.9);
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(110, audioCtx.currentTime);
+    gain.gain.setValueAtTime(getVolume() * 0.25, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+    osc1.start(audioCtx.currentTime);
+    osc2.start(audioCtx.currentTime);
+    osc1.stop(audioCtx.currentTime + 1.0);
+    osc2.stop(audioCtx.currentTime + 1.0);
+  }
+
+  // ── LOGIQUE ──
+  function lancer() {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const btn = document.getElementById('generate-btn');
+    const msg = document.getElementById('cooldown-msg');
+
+    btn.disabled = true;
+    msg.classList.add('show');
+    msg.textContent = '⏳ Lancement dans 3 secondes...';
+
+    let countdown = 3;
+    const cooldownInterval = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        msg.textContent = `⏳ Lancement dans ${countdown} seconde${countdown > 1 ? 's' : ''}...`;
+      } else {
+        clearInterval(cooldownInterval);
+        msg.classList.remove('show');
+        btn.disabled = false;
+      }
+    }, 1000);
+
+    resetAnim();
+
+    const photo = document.getElementById('f-photo').value.trim();
+    const name  = document.getElementById('f-name').value.trim() || 'Prénom Nom';
+    const type  = document.getElementById('f-type').value;
+    const dur   = parseInt(document.getElementById('f-timer').value);
+
+    const img = document.getElementById('photo-img');
+    const ph  = document.getElementById('photo-placeholder');
+    if (photo) {
+      img.src = photo; img.style.display = 'block'; ph.style.display = 'none';
+      img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
+    } else {
+      img.style.display = 'none'; ph.style.display = 'flex';
+    }
+
+    document.getElementById('reveal-name').textContent = name;
+    const rt = document.getElementById('reveal-type');
+    rt.textContent = type === 'linkedin' ? '💼 LinkedIn' : '🚨 Interpol';
+    rt.className = 'reveal-type ' + type;
+
+    setTimeout(() => {
+      document.getElementById('tiktok-question').style.opacity = '1';
+      document.getElementById('tiktok-question').style.transform = 'translateY(0)';
+    }, 3300);
+
+    setTimeout(() => {
+      const photoEl = document.getElementById('tiktok-photo');
+      photoEl.style.opacity = '1';
+      photoEl.style.transform = 'translate(-50%, -50%) scale(1)';
+    }, 3800);
+
+    setTimeout(() => {
+      document.getElementById('tiktok-timer').style.opacity = '1';
+      document.getElementById('timer-num').textContent = dur;
+      startTimer(dur, type);
+    }, 4400);
+  }
+
+  function startTimer(dur, type) {
+    let t = dur;
+    timerInterval = setInterval(() => {
+      playTick();
+      t--;
+      document.getElementById('timer-num').textContent = t;
+      if (t <= 0) {
+        clearInterval(timerInterval);
+        reveler(type);
+      }
+    }, 1000);
+  }
+
+  function reveler(type) {
+    document.getElementById('tiktok-timer').style.opacity = '0';
+
+    const overlay = document.getElementById('reveal-overlay');
+    overlay.className = 'reveal-overlay ' + type;
+    overlay.style.opacity = '1';
+
+    document.getElementById('tiktok-photo').style.top = '36%';
+
+    if (type === 'linkedin') playLinkedIn();
+    else playInterpol();
+
+    setTimeout(() => {
+      document.getElementById('tiktok-reveal').style.opacity = '1';
+      document.getElementById('tiktok-reveal').style.transform = 'translateY(0)';
+    }, 400);
+  }
+
+  function resetAnim() {
+    clearInterval(timerInterval);
+
+    const overlay = document.getElementById('reveal-overlay');
+    overlay.style.opacity = '0';
+    overlay.className = 'reveal-overlay';
+
+    document.getElementById('tiktok-question').style.opacity = '0';
+    document.getElementById('tiktok-question').style.transform = 'translateY(-15px)';
+
+    const photoEl = document.getElementById('tiktok-photo');
+    photoEl.style.opacity = '0';
+    photoEl.style.transform = 'translate(-50%, -50%) scale(0.8)';
+    photoEl.style.top = '50%';
+
+    document.getElementById('tiktok-timer').style.opacity = '0';
+    document.getElementById('tiktok-reveal').style.opacity = '0';
+    document.getElementById('tiktok-reveal').style.transform = 'translateY(30px)';
+  }
+
+  function pleinEcran() {
+    const frame = document.getElementById('frame');
+    if (frame.requestFullscreen) frame.requestFullscreen();
+    else if (frame.webkitRequestFullscreen) frame.webkitRequestFullscreen();
+  }
+</script>
+</body>
+</html>
