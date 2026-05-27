@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>À propos — LinkedIn ou Interpol ?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a; --white: #f5f2eb; --red: #e63329;
+      --blue: #0a66c2; --gray: #b0aa9e; --card-bg: #131310;
+      --border: rgba(255,255,255,0.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--black); color: var(--white); font-family: 'Syne', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 0.5px solid var(--border); background: rgba(10,10,10,0.9); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
+    .nav-logo { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; color: var(--white); }
+    .nav-logo span.li { color: var(--blue); }
+    .nav-logo span.int { color: var(--red); }
+    .nav-back { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); text-decoration: none; border: 0.5px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 4px; transition: background 0.2s; }
+    .nav-back:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+
+    main { flex: 1; max-width: 760px; margin: 0 auto; width: 100%; padding: 3rem 1.5rem; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 800; margin-bottom: 2.5rem; letter-spacing: -0.02em; }
+    
+    section { margin-bottom: 2.5rem; background: var(--card-bg); border: 0.5px solid var(--border); padding: 2rem; border-radius: 8px; }
+    
+    h2 { font-size: 18px; font-weight: 700; margin-bottom: 1rem; color: var(--white); display: flex; align-items: center; gap: 0.5rem; }
+    h2 span { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--gray); font-weight: 400; }
+
+    p { font-size: 14px; color: var(--gray); line-height: 1.6; font-weight: 400; margin-bottom: 1rem; }
+    p:last-of-type { margin-bottom: 0; }
+    strong { color: var(--white); font-weight: 700; }
+
+    ul { list-style: none; margin-top: 0.75rem; }
+    li { font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 0.75rem; padding-left: 1.2rem; position: relative; }
+    li::before { content: "—"; position: absolute; left: 0; color: var(--border); }
+    li:last-child { margin-bottom: 0; }
+
+    .highlight-box { background: rgba(255, 255, 255, 0.02); border-left: 2px solid var(--white); padding: 1rem; margin-top: 1rem; border-radius: 0 4px 4px 0; }
+    .highlight-box p { font-size: 13px; font-style: italic; }
+
+    footer { padding: 1rem 2rem; border-top: 0.5px solid var(--border); text-align: center; margin-top: auto; }
+    footer p { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gray); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="li">Linked</span>In <span style="color:rgba(255,255,255,0.3)">ou</span> <span class="int">Inter</span>pol
+    </a>
+    <a href="index.html" class="nav-back">← Retour au jeu</a>
+  </nav>
+
+  <main>
+    <h1>À propos — LinkedIn ou Interpol ?</h1>
+
+    <section>
+      <h2><span>1.</span> L'histoire du projet</h2>
+      <p>Le projet <strong>LinkedIn ou Interpol ?</strong> est né d'un constat simple et amusant : en naviguant sur les réseaux professionnels, on tombe parfois sur des descriptions de profils si intenses, mystérieuses ou remplies de jargon corporate qu'elles ressemblent à s'y méprendre à des avis de recherche internationaux. À l'inverse, certaines notices d'Interpol décrivent des parcours complexes qui pourraient presque figurer sur un CV de haut vol.</p>
+      <p>Nous avons donc décidé de transformer cette observation en un jeu de devinettes multijoueur fun, rapide et accessible à tous. Notre principale motivation était de rendre ce jeu multijoueur.</p>
+    </section>
+
+    <section>
+      <h2><span>2.</span> Comment les fiches sont sélectionnées ?</h2>
+      <p>Chaque fiche présente dans le jeu fait l'objet d'une sélection attentive afin de garantir le côté insolite et le challenge du quiz.</p>
+      <ul>
+        <li><strong>Côté LinkedIn :</strong> Nous sélectionnons des profils publics de cadres, d'entrepreneurs ou de spécialistes du marketing aux biographies particulièrement originales ou denses en mots-clés ("Growth Hacker", "Disrupteur", etc.).</li>
+        <li><strong>Côté Interpol :</strong> Nous consultons les notices rouges publiques issues du site officiel d'Interpol, en nous concentrant sur des profils atypiques (finance, cybercriminalité, diplomatie parallèle).</li>
+        <li><strong>Transparence :</strong> À la fin de chaque round, un lien direct vers la source publique (le profil LinkedIn ou la notice Interpol) est fourni pour permettre aux joueurs de vérifier l'information par eux-mêmes.</li>
+      </ul>
+      <div class="highlight-box">
+        <p><strong>À noter :</strong> Les photos sont difficiles pour quelqu'un qui n'a jamais joué. Les photos sont piégeuses exprès pour qu'on s'amuse !</p>
+      </div>
+    </section>
+
+    <section>
+      <h2><span>3.</span> L'équipe derrière le jeu</h2>
+      <p>Ce jeu est développé et édité de manière indépendante par un passionné de développement web et de culture internet. Conçu comme un projet open-source et de divertissement, le site utilise les dernières technologies du web (HTML5, CSS modernisé via la police Syne, et Firebase Realtime Database pour synchroniser les salons de jeu multijoueur en direct).</p>
+      <p>L'objectif est de proposer une expérience fluide, sans inscription obligatoire, pour jouer instantanément entre amis ou en communauté.</p>
+    </section>
+
+    <section>
+      <h2><span>4.</span> Les règles détaillées</h2>
+      <ul>
+        <li><strong>Rejoindre une partie :</strong> Créez un salon ou rejoignez vos amis grâce à un code de chambre unique. Ou alors, lancez simplement une partie en solo.</li>
+        <li><strong>Le round :</strong> À chaque question, une photo et un résumé de biographie s'affichent à l'écran. Vous avez un temps limité (10 secondes par défaut) pour analyser les indices (pays, style d'écriture, jargon).</li>
+        <li><strong>Le vote :</strong> Cliquez sur le bouton 💼 LinkedIn ou 🚨 Interpol.</li>
+        <li><strong>Attente et Révélation :</strong> Dès que tous les joueurs ont voté (ou que le chrono s'est écoulé), la bonne réponse est révélée.</li>
+        <li><strong>Attribution des points :</strong> Chaque bonne réponse rapporte 1 point. Si le "Mode Élimination" est activé par l'hôte, la moindre erreur vous élimine de la partie en cours !</li>
+        <li><strong>Le Podium :</strong> À la fin de la série de questions, le classement final affiche le grand gagnant sur un podium dynamique (Or, Argent, Bronze) suivi du top des meilleurs profils (jusqu'à 8 joueurs).</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 LinkedIn ou Interpol ?</p>
+  </footer>
+
+</body>
+</html>
