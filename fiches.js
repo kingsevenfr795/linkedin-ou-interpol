@@ -152,7 +152,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Touhajleb Sidy Aly",
     country: "Mauritanie",
-    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQEsq7Zz8FcKiw/profile-displayphoto-shrink_200_200/B4EZdewsb4HgAc-/0/1749641513539?e=1780531200&v=beta&t=asTmtJE80IQ3pNb6Ne9WgNPAyH2GiV3muobUAulkW3g",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQEsq7Zz8FcKiw/profile-displayphoto-shrink_100_100/B4EZdewsb4HgAY-/0/1749641513532?e=1788998400&v=beta&t=HOU4unKtIU95CDwB3qYQK-eW2mVDwkUTkiQFmaKXh7g",
     desc:    "Management",
     url:     "https://www.linkedin.com/in/touhajleb-sidi-aly-289772164/"
   },
@@ -163,25 +163,16 @@ const FICHES = [
     type:    "linkedin",
     name:    "Katanekwa Njekwa",
     country: "Zambie",
-    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQECrrj2y6LbnQ/profile-displayphoto-scale_200_200/B4DZ39cF3THIAc-/0/1778073495213?e=1780531200&v=beta&t=RM78jMiQ1d5ePt9yAa077KqkUWAxWlkYEgHYEghzBV4",
+    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQECrrj2y6LbnQ/profile-displayphoto-scale_200_200/B4DZ39cF3THIAc-/0/1778073495213?e=1788998400&v=beta&t=WpvkYWeCcmn7uwtOHnAKVt0SF2v8VPxUYzSPULTlTqU",
     desc:    "Etudiant",
     url:     "https://www.linkedin.com/in/katanekwa-njekwa-617860408/"
   },
 
   {
     type:    "linkedin",
-    name:    "Didace Majyambere",
-    country: "Rwanda",
-    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQGAXQKRPycQRw/profile-displayphoto-scale_200_200/B4DZ30PpKBJAAY-/0/1777919245603?e=1780531200&v=beta&t=kOP3ZlFk4mLSaZtLBz1QXPqjTrFpE1rqufLu1AYVd3Y",
-    desc:    "Etudiant",
-    url:     "https://www.linkedin.com/in/didace-majyambere-4a5262408/"
-  },
-
-  {
-    type:    "linkedin",
     name:    "Bertrand Belange",
     country: "Rwanda",
-    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQHRR1hOHDEp0A/profile-displayphoto-scale_200_200/B4DZwc_HK0IAAY-/0/1770012833462?e=1780531200&v=beta&t=S_5Mj2kRchG-SGmoNeCFvciJRjdXzTRo77ZC-DGXaic",
+    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQGZaCtzzOScFQ/profile-displayphoto-scale_100_100/B4DZ8oesFPIIAY-/0/1783090561944?e=1788998400&v=beta&t=FoN2zEQfU8m35KPrWXuuFW6G2bRaxd1W2ngS9BifWfc",
     desc:    "Laboratoire Médical",
     url:     "https://www.linkedin.com/in/nzamwita-belange-bertrand-a6a2563aa/"
   },
@@ -199,7 +190,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Aymeric GENY",
     country: "France",
-    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQHgFp61pRTmiQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1624303208603?e=1780531200&v=beta&t=WUjtqsTDMHyY-JGN8h-DZyODCVL4fpdou53SQirVk-U",
+    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQHgFp61pRTmiQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1624303208603?e=1788998400&v=beta&t=42T2sPNURWg2aoKvtht-HEf3giMnBHMmgb96pYag5lw",
     desc:    "President 67 Brainrot Company",
     url:     "https://www.linkedin.com/in/aymeric-geny-8b2bba212/"
   },
@@ -217,7 +208,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Guilherme Nogueira",
     country: "Brésil",
-    photo:   "https://media.licdn.com/dms/image/v2/D5603AQH2mBwM1NrkVg/profile-displayphoto-shrink_200_200/B56Z2MtC4EH4Ac-/0/1776182112266?e=1780531200&v=beta&t=t9uXQjYyVlm6sRb2zx2QridaUeZ53Nr_ukf2xImNT48",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQH2mBwM1NrkVg/profile-displayphoto-shrink_100_100/B56Z2MtC4EH4AY-/0/1776182112312?e=1788998400&v=beta&t=uqPNk6Mm6EYmt_Ako1jABj33esDUmIHnqcOwU8dFHW4",
     desc:    "Proffeseur",
     url:     "https://www.linkedin.com/in/guilherme-nogueira-ribeiro-305551403/"
   },
@@ -226,7 +217,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Enrico Baiamonte",
     country: "Brésil",
-    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQGHXbJD1w7IMg/profile-displayphoto-scale_200_200/B4DZ1kW.udJMAY-/0/1775505246132?e=1780531200&v=beta&t=-_P0Yw0A8DWVLRzmpnloIHAwCEuqeKSD_VHhu9WJzfM",
+    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQHjQs2aXohvxA/profile-displayphoto-scale_200_200/B4DZ6TrLUpGYAc-/0/1780594030751?e=1788998400&v=beta&t=-p-XwNyUIChD7Xz3dnckYrw1Yejbt0Uli_1HnRJVsZ4",
     desc:    "Jsp ce qu'il fait, il doit etre au chomage",
     url:     "https://www.linkedin.com/in/enrico-baiamonte-540190362/"
   },
@@ -235,7 +226,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Coby Foust",
     country: "Royaume-Uni",
-    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFX8szwRIUJ8Q/profile-displayphoto-scale_200_200/B56Zwjr5ywJcAY-/0/1770125241249?e=1780531200&v=beta&t=WySK9VwNHMhyoXaKx5SN9aPhCCTIbP-7ctvN1GCDyhU",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFX8szwRIUJ8Q/profile-displayphoto-scale_200_200/B56Zwjr5ywJcAY-/0/1770125241249?e=1788998400&v=beta&t=E93vMQnuL3ljtF21PzcdfsKsDwyeZNQCBJtSARxOz2Q",
     desc:    "Cow-Boy",
     url:     "https://www.linkedin.com/in/coby-foust-b87159155/"
   },
@@ -244,7 +235,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Mathhew Clemens",
     country: "Royaume-Uni",
-    photo:   "https://media.licdn.com/dms/image/v2/C4E03AQEYVA9zS52jSA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1598073857449?e=1780531200&v=beta&t=hamJIoZJ70ctDpXzc8QD7Vx0tshd_XbjPslaJ57Cx-Q",
+    photo:   "https://media.licdn.com/dms/image/v2/C4E03AQEYVA9zS52jSA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1598073857449?e=1788998400&v=beta&t=JU_Gs60wFm3LH4Lni59Gq5MGFHGsmMiiDk8wLs0oiiU",
     desc:    "Manager at Kinder Morgan",
     url:     "https://www.linkedin.com/in/matthewclemens/"
   },
@@ -262,7 +253,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Paulo José",
     country: "Mozambique",
-    photo:   "https://media.licdn.com/dms/image/v2/C4E03AQF6oYXl_dcG3g/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1521990120815?e=1780531200&v=beta&t=zL6fNs-ylGNBFOQuhlD8JS6mvsCDO4QGoxWLIKjkGPA",
+    photo:   "https://media.licdn.com/dms/image/v2/C4E03AQF6oYXl_dcG3g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1521990121006?e=1788998400&v=beta&t=7Y-8fLvxeQyDIp5PtzegvEfzzNK_oWQP-VJJs28X-Yg",
     desc:    "Opérateur Crane Uniquement",
     url:     "https://www.linkedin.com/in/paulo-jos%C3%A9-boane-6991967a/"
   },
@@ -271,7 +262,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Ching Chong",
     country: "Malaisie",
-    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFy2xFpe6j3MA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1677248285992?e=1780531200&v=beta&t=Gzr9abKSo8aT-xJpuC1K39Fw7aVqAfOhaPB7x6RfBaQ",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFy2xFpe6j3MA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1677248285992?e=1788998400&v=beta&t=cORLjI7nnPN96GN7uDqIxdqrb0Rl1TQvcuf9qUmFCVQ",
     desc:    "Travail pour la Malaisie",
     url:     "https://www.linkedin.com/in/ching-chong-314737267/"
   },
@@ -280,7 +271,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Han Her",
     country: "Corée Du Sud",
-    photo:   "https://media.licdn.com/dms/image/v2/C5603AQFWSgZx72mDZw/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1517064310204?e=1780531200&v=beta&t=ZMKWCZTSaAlxo2zXx7YcEtvHSEVhL24354EkNE49-K8",
+    photo:   "https://media.licdn.com/dms/image/v2/C5603AQFWSgZx72mDZw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517064310219?e=1788998400&v=beta&t=1tU8bc6ondldEkhScABEP9_JoKQ5mVQ0tfxihCVbLP0",
     desc:    "주식회사 오늘건축사사무소 대표이사",
     url:     "https://www.linkedin.com/in/han-her-21416b155/"
   },
@@ -289,7 +280,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Peter Foreskin",
     country: "Australie",
-    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQHJ861LTJQI5g/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718333921693?e=1780531200&v=beta&t=5B734ayxqnsQrE0_RMEXC5IyHm7vA9sq_cFEIjDC2kQ",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQHJ861LTJQI5g/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1718327340831?e=1788998400&v=beta&t=dnXb-TAmKfspCSGMNyML7V3Am2Fo2kFd8IrFIA-IWLM",
     desc:    "Foreskin Society",
     url:     "https://www.linkedin.com/in/peter-foreskin-95348830b/"
   },
@@ -298,7 +289,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Ching Chong",
     country: "Etats-Unis",
-    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQEhQrVNnSV_kA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1517060298473?e=1780531200&v=beta&t=rP_10vGycYKgRghbFL61tTNBO-3P3WDygkL0Ja8lCOk",
+    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQEhQrVNnSV_kA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517060298689?e=1788998400&v=beta&t=evFk8yXzb02JVc98z2Ae52ITJuLUOXu2VfLHkbpYkrQ",
     desc:    "Cryptomonnaie",
     url:     "https://www.linkedin.com/in/chiggaventures/"
   },
@@ -307,7 +298,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Chua Chenghe",
     country: "Singapour",
-    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFHSwIKZ85ARg/profile-displayphoto-scale_200_200/B56Zq1S2JcHYAY-/0/1763978209023?e=1780531200&v=beta&t=fXR0YPcNXHWUxqOGJq0Lh2uoXLUSEN6HK5YpwonB5WI",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFHSwIKZ85ARg/profile-displayphoto-scale_100_100/B56Zq1S2JcHYAc-/0/1763978209023?e=1788998400&v=beta&t=likYKLbZ46AYBZ8HpBr52v9FlBG9fHyKM-BfSkmbcis",
     desc:    "Il a 7 ans",
     url:     "https://www.linkedin.com/in/chua-chenghe-913905277/"
   },
@@ -316,7 +307,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Gneli Onsou",
     country: "Tchad",
-    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFeZZTpforGZw/profile-displayphoto-shrink_800_800/B56ZN7b4laG4Ac-/0/1732942729448?e=1780531200&v=beta&t=s01rGnHaa8Rs-_3p8YANTo8GhnP8ptcCmhhT_cPz690",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFeZZTpforGZw/profile-displayphoto-shrink_100_100/B56ZN7b4laG4AU-/0/1732942729440?e=1788998400&v=beta&t=dDvh11kyL0xn5eBnL_gqlsd7wdZW7P3Fd0wANFtuiZo",
     desc:    "Actuellement au chomage",
     url:     "https://www.linkedin.com/in/gneli-onsou-a2351833b/"
   },
@@ -325,7 +316,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Abdelhamid fenniri",
     country: "Maroc",
-    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFXOVJlKe6TmA/profile-displayphoto-shrink_800_800/B4EZSYPEajGgAc-/0/1737720875929?e=1780531200&v=beta&t=KyW_rafHLqrgYxUC-4nc__ANzTFTaCfVQ0SxlL27fgg",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFXOVJlKe6TmA/profile-displayphoto-shrink_100_100/B4EZSYPEajGgAU-/0/1737720875905?e=1788998400&v=beta&t=wXw8YhuFcUHb590VvHmfqtzFAdZjQ7vEtaZLURJ7Ff0",
     desc:    "Chef BRICOMA",
     url:     "https://www.linkedin.com/in/abdelhamid-fenniri-28223b116/"
   },
@@ -334,7 +325,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Mustapha Swinga",
     country: "Maroc",
-    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQHLVdClu7L-Nw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1574889441975?e=1780531200&v=beta&t=-cHX_wW0ZoOtl6JCVAEp5xH-dVW1gc-2l5s82x2WRAM",
+    photo:   "https://media.licdn.com/dms/image/v2/C4D03AQHLVdClu7L-Nw/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1574889441896?e=1788998400&v=beta&t=BPoWnDc66d6FLSC27RX4r6YSCAgqio8yivLx1Bgpvc8",
     desc:    "Réalisateur & Directeur Créatif",
     url:     "https://www.linkedin.com/in/mustaphaswinga/"
   },
@@ -343,7 +334,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Yomi (le goat) Denzel",
     country: "Suisse",
-    photo:   "https://media.licdn.com/dms/image/v2/D4E35AQF3CSuBqIh2vA/profile-framedphoto-shrink_800_800/B4EZqnHNoiGYAg-/0/1763740277589?e=1779469200&v=beta&t=qC8D3vRu4UUOg392uSOylHwUJ9SXGD64CoeHKESeqi0",
+    photo:   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyPT8G0XJlxf9XgBXRHN4vkZobwOyOTWL0wdKFrZBXcg&s=10",
     desc:    "Building products, brands and teams",
     url:     "https://www.linkedin.com/in/yomi-denzel-471934184/"
   },
@@ -352,7 +343,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Foreman Kandakada",
     country: "Inde",
-    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFkGxGRZ_cOeQ/profile-displayphoto-crop_800_800/B4EZ2fUHeDIwAI-/0/1776494349370?e=1780531200&v=beta&t=H_HwaeEH-GbuvRgnHgNK2gtdYU4X7FE9jzgcEBhzOz0",
+    photo:   "https://media.licdn.com/dms/image/v2/D4E03AQFkGxGRZ_cOeQ/profile-displayphoto-scale_100_100/B4EZ2fUHeDIwAc-/0/1776494349478?e=1788998400&v=beta&t=JkbNHihsl_lyeWS-gY5o6w0Ha-RXejqXaN2UvXFnQ14",
     desc:    "Chomage",
     url:     "https://www.linkedin.com/in/foreman-kandakanda-440108404/"
   },
@@ -361,7 +352,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "S. Vigneshwaran",
     country: "Inde (butter chicken)",
-    photo:   "https://media.licdn.com/dms/image/v2/D5603AQEei_R8QnNpkA/profile-displayphoto-crop_800_800/B56ZpduxVEJsAI-/0/1762509151659?e=1780531200&v=beta&t=CByJjihAPyU7IpLhwKj5gPp9dEhCCITDRDZtwf3nPjo",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQEei_R8QnNpkA/profile-displayphoto-scale_100_100/B56ZpduxVEJsAc-/0/1762509151745?e=1788998400&v=beta&t=_-m8b4n_pTot16eJBG2wwn0Sc9k4LBFEZ-_6gg1jXFk",
     desc:    "HR Recruiter",
     url:     "https://www.linkedin.com/in/vigneshwaran-s-a864582aa/"
   },
@@ -370,7 +361,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Alagesan Mohanraj",
     country: "Inde",
-    photo:   "https://media.licdn.com/dms/image/v2/C5103AQHi-39BScKYQA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1586755617290?e=1780531200&v=beta&t=DgRvsqnFP6icia34v303YNHWeeOlCNhXNUEZ27Oy89o",
+    photo:   "https://media.licdn.com/dms/image/v2/C5103AQHi-39BScKYQA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1586755617236?e=1788998400&v=beta&t=FuEyi20Pr1a3meHHrlHikPQ8yxvrT8pa52iry8gfQjM",
     desc:    "CEO  at NEXXGEN GLOBAL MACHINE TOOLS",
     url:     "https://www.linkedin.com/in/alagesan-mohanraj-094774121/"
   },
