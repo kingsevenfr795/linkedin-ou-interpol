@@ -190,7 +190,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Gervais TWAGINAMARU",
     country: "Rwanda",
-    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFZKWZb2Uxk4Q/profile-displayphoto-shrink_200_200/B56Zc9egCxG0AY-/0/1749083095682?e=1780531200&v=beta&t=xdL24hzXemWcIDoY5BQagLcY5oumOOTZ64Y-5lef4_A",
+    photo:   "https://media.licdn.com/dms/image/v2/D5603AQFZKWZb2Uxk4Q/profile-displayphoto-shrink_200_200/B56Zc9egCxG0AY-/0/1749083095682?e=1788998400&v=beta&t=eQ8ZuPjYzouPqS4K1PU_N2YqWfjCjI5nkdYDD6Y5TMw",
     desc:    "Laboratoire Médical",
     url:     "https://www.linkedin.com/in/gervais-twagiramungu-796a67369/"
   },
