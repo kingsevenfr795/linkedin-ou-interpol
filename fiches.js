@@ -40,15 +40,6 @@ const FICHES = [
     url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-20470"
   },
 
-   {
-    type:    "interpol",
-    name:    "Ravshan Mukthididinov",
-    country: "Ouzbékistan",
-    photo:   "https://ws-public.interpol.int/notices/v1/red/2026-11370/images/63813681",
-    desc:    "Hooliganisme",
-    url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-11370"
-  },
-
   {
     type:    "interpol",
     name:    "Vasyl Nemesh",
