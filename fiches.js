@@ -208,7 +208,7 @@ const FICHES = [
     type:    "linkedin",
     name:    "Foued undefined",
     country: "France",
-    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQFaDs-cAoUwiw/profile-displayphoto-scale_200_200/B4DZ34pksXHwAY-/0/1777993148528?e=1780531200&v=beta&t=veoWsCyYTyBEG18diwAMycaKgkrEzgn7oo3qurN3iWE",
+    photo:   "https://media.licdn.com/dms/image/v2/D4D03AQFaDs-cAoUwiw/profile-displayphoto-scale_100_100/B4DZ34pksXHwAc-/0/1777993148528?e=1788998400&v=beta&t=WEZiTRh5XnmzRvJPSgcvRuF1h_YLWhRnafamwNpGTws",
     desc:    "Harvard",
     url:     "https://www.linkedin.com/in/foued-undefined-394303404/"
   },
