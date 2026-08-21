@@ -29,8 +29,53 @@
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--white); font-family: 'Syne', sans-serif; overflow-x: hidden; }
 
+    /* --- Bannière de mise à jour --- */
+    #update-banner {
+      background: linear-gradient(90deg, #0a66c2, #e63329);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      position: relative;
+      z-index: 999;
+    }
+    #update-banner .banner-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      text-align: center;
+      padding: 12px 44px;
+    }
+    #update-banner .banner-link {
+      background: #fff;
+      color: #0a0a0a;
+      padding: 5px 14px;
+      border-radius: 2px;
+      text-decoration: none;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    #update-banner .banner-close {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      opacity: 0.7;
+      font-size: 18px;
+      line-height: 1;
+      transition: opacity 0.15s;
+    }
+    #update-banner .banner-close:hover { opacity: 1; }
+    @media (max-width: 640px) {
+      #update-banner .banner-inner { padding: 12px 40px; font-size: 13px; }
+    }
+
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.25rem 2.5rem;
       background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);
@@ -145,6 +190,14 @@
   </style>
 </head>
 <body>
+
+  <div id="update-banner">
+    <div class="banner-inner">
+      <span>🔥 MISE À JOUR — Bug résolu ! Le mode <span style="text-decoration:underline;">Multijoueur</span> est 100% opérationnel — Défiez vos amis maintenant !</span>
+      <a href="multijoueur.html" class="banner-link">Jouer →</a>
+    </div>
+    <span class="banner-close" onclick="document.getElementById('update-banner').style.display='none'">✕</span>
+  </div>
 
   <nav>
     <div class="nav-logo">
