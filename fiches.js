@@ -467,11 +467,11 @@ const FICHES = [
 
     {
     type:    "interpol",
-    name:    "",
-    country: "",
-    photo:   "",
-    desc:    "",
-    url:     ""
+    name:    "Kylian Dictateur",
+    country: "Cameroun",
+    photo:   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqyko_X5CQyYQiS041g2fVMLZJNgjn_g6-YR2SskfNlQ&s=10",
+    desc:    "Dictateur",
+    url:     "https://www.interpol.int/fr/Notre-action/Notices/Notices-rouges/Voir-les-notices-rouges#2026-56708"
   },
   
   ];
