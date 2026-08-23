@@ -187,6 +187,27 @@
     .hero-title { animation: fadeUp 0.6s 0.1s ease both; }
     .hero-desc { animation: fadeUp 0.6s 0.2s ease both; }
     .hero-actions { animation: fadeUp 0.6s 0.3s ease both; }
+
+    /* --- Bandeau cookies --- */
+    #cookie-banner {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+      background: var(--card-bg); border-top: 0.5px solid var(--border);
+      padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: center;
+      gap: 1.5rem; flex-wrap: wrap; box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    }
+    #cookie-banner p { font-size: 12px; color: var(--gray); max-width: 480px; line-height: 1.5; margin: 0; }
+    #cookie-banner .cookie-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    #cookie-accept {
+      background: var(--white); color: var(--black); border: none;
+      padding: 0.7rem 1.75rem; border-radius: 2px; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 13px; cursor: pointer; transition: background 0.15s;
+    }
+    #cookie-accept:hover { background: #ddd9d1; }
+    #cookie-settings {
+      background: none; border: none; color: var(--gray); font-size: 11px;
+      text-decoration: underline; cursor: pointer; font-family: 'DM Mono', monospace;
+    }
+    #cookie-banner.hide { display: none; }
   </style>
 </head>
 <body>
@@ -313,7 +334,7 @@
 
     <div class="privacy-block">
       <h3>1. Données collectées</h3>
-      <p>LinkedIn ou Interpol ? ne demande aucune inscription ni création de compte pour jouer. Aucun nom, prénom, numéro de téléphone ou donnée personnelle identifiable n’est volontairement demandé. Certaines données techniques minimales (type de navigateur, adresse IP ou données de connexion) peuvent toutefois être traitées automatiquement par l’hébergeur afin d’assurer le bon fonctionnement et la sécurité du site.</p>
+      <p>LinkedIn ou Interpol ? ne demande aucune inscription ni création de compte pour jouer. Aucun nom, prénom, numéro de téléphone ou donnée personnelle identifiable n'est volontairement demandé. Certaines données techniques minimales (type de navigateur, adresse IP ou données de connexion) peuvent toutefois être traitées automatiquement par l'hébergeur afin d'assurer le bon fonctionnement et la sécurité du site.</p>
     </div>
 
     <div class="privacy-block">
@@ -328,7 +349,7 @@
 
     <div class="privacy-block">
       <h3>4. Données de session</h3>
-      <p>Certaines informations liées au fonctionnement du jeu (comme des scores ou préférences locales) peuvent être enregistrées temporairement dans le stockage local de votre navigateur afin d’améliorer l’expérience utilisateur. Ces données restent stockées uniquement sur votre appareil et ne sont pas transmises au propriétaire du site.</p>
+      <p>Certaines informations liées au fonctionnement du jeu (comme des scores ou préférences locales) peuvent être enregistrées temporairement dans le stockage local de votre navigateur afin d'améliorer l'expérience utilisateur. Ces données restent stockées uniquement sur votre appareil et ne sont pas transmises au propriétaire du site.</p>
     </div>
 
     <div class="privacy-block">
@@ -369,6 +390,25 @@
     };
   </script>
   <script src="https://www.highrevenueformat.com/67d6e39686b1767150408600e7b7694c/invoke.js"></script>
+
+  <!-- BANDEAU COOKIES -->
+  <div id="cookie-banner">
+    <p>Ce site utilise des cookies pour améliorer votre expérience et diffuser des publicités personnalisées via nos partenaires.</p>
+    <div class="cookie-actions">
+      <button id="cookie-accept" onclick="acceptCookies()">Accepter</button>
+      <button id="cookie-settings" onclick="alert('Paramètres des cookies : contactez contact.linkedin.ou.interpol@gmail.com pour toute demande.')">Gérer mes préférences</button>
+    </div>
+  </div>
+
+  <script>
+    function acceptCookies() {
+      localStorage.setItem('cookiesAccepted', 'true');
+      document.getElementById('cookie-banner').classList.add('hide');
+    }
+    if (localStorage.getItem('cookiesAccepted') === 'true') {
+      document.getElementById('cookie-banner').classList.add('hide');
+    }
+  </script>
 
 </body>
 </html>
