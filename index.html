@@ -208,6 +208,66 @@
       text-decoration: underline; cursor: pointer; font-family: 'DM Mono', monospace;
     }
     #cookie-banner.hide { display: none; }
+
+    /* --- Modal préférences cookies --- */
+    #cookie-modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.75); align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    #cookie-modal-overlay.show { display: flex; }
+    #cookie-modal {
+      background: var(--card-bg); border: 0.5px solid var(--border); border-radius: 8px;
+      width: 100%; max-width: 380px; max-height: 70vh;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    #cookie-modal-header {
+      padding: 1.25rem; border-bottom: 0.5px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    #cookie-modal-header h3 { font-size: 14px; font-weight: 700; }
+    #cookie-modal-header button {
+      background: none; border: none; color: var(--gray); font-size: 16px; cursor: pointer;
+    }
+    #cookie-modal-body {
+      padding: 1.25rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.25rem;
+      flex: 1;
+    }
+    .cookie-cat {
+      border-bottom: 0.5px solid var(--border); padding-bottom: 1.25rem;
+    }
+    .cookie-cat:last-child { border-bottom: none; padding-bottom: 0; }
+    .cookie-cat-row {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;
+    }
+    .cookie-cat-title { font-size: 13px; font-weight: 700; }
+    .cookie-cat-desc { font-size: 11px; color: var(--gray); line-height: 1.5; }
+    .cookie-toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .cookie-toggle input { opacity: 0; width: 0; height: 0; }
+    .cookie-toggle-slider {
+      position: absolute; inset: 0; background: rgba(255,255,255,0.1);
+      border-radius: 100px; cursor: pointer; transition: background 0.2s;
+    }
+    .cookie-toggle-slider::before {
+      content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px;
+      background: var(--white); border-radius: 50%; transition: transform 0.2s;
+    }
+    .cookie-toggle input:checked + .cookie-toggle-slider { background: #22c55e; }
+    .cookie-toggle input:checked + .cookie-toggle-slider::before { transform: translateX(18px); }
+    .cookie-toggle input:disabled + .cookie-toggle-slider { opacity: 0.4; cursor: not-allowed; }
+    #cookie-modal-footer {
+      padding: 1.25rem; border-top: 0.5px solid var(--border);
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    #cookie-save-prefs {
+      background: var(--white); color: var(--black); border: none;
+      padding: 0.7rem; border-radius: 2px; font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 13px; cursor: pointer;
+    }
+    #cookie-refuse-all {
+      background: none; border: 0.5px solid var(--border); color: var(--gray);
+      padding: 0.6rem; border-radius: 2px; font-family: 'Syne', sans-serif;
+      font-size: 12px; cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -396,7 +456,79 @@
     <p>Ce site utilise des cookies pour améliorer votre expérience et diffuser des publicités personnalisées via nos partenaires.</p>
     <div class="cookie-actions">
       <button id="cookie-accept" onclick="acceptCookies()">Accepter</button>
-      <button id="cookie-settings" onclick="alert('Paramètres des cookies : contactez contact.linkedin.ou.interpol@gmail.com pour toute demande.')">Gérer mes préférences</button>
+      <button id="cookie-settings" onclick="document.getElementById('cookie-modal-overlay').classList.add('show')">Gérer mes préférences</button>
+    </div>
+  </div>
+
+  <!-- MODAL PRÉFÉRENCES COOKIES -->
+  <div id="cookie-modal-overlay">
+    <div id="cookie-modal">
+      <div id="cookie-modal-header">
+        <h3>Préférences des cookies</h3>
+        <button onclick="document.getElementById('cookie-modal-overlay').classList.remove('show')">✕</button>
+      </div>
+      <div id="cookie-modal-body">
+
+        <div class="cookie-cat">
+          <div class="cookie-cat-row">
+            <span class="cookie-cat-title">Cookies strictement nécessaires</span>
+            <div class="cookie-toggle">
+              <input type="checkbox" checked disabled />
+              <span class="cookie-toggle-slider"></span>
+            </div>
+          </div>
+          <p class="cookie-cat-desc">Indispensables au fonctionnement du site. Toujours actifs.</p>
+        </div>
+
+        <div class="cookie-cat">
+          <div class="cookie-cat-row">
+            <span class="cookie-cat-title">Publicité personnalisée</span>
+            <div class="cookie-toggle">
+              <input type="checkbox" id="pref-ads" checked />
+              <span class="cookie-toggle-slider"></span>
+            </div>
+          </div>
+          <p class="cookie-cat-desc">Utilisés par nos partenaires (Adsterra) pour diffuser des publicités pertinentes.</p>
+        </div>
+
+        <div class="cookie-cat">
+          <div class="cookie-cat-row">
+            <span class="cookie-cat-title">Mesure d'audience</span>
+            <div class="cookie-toggle">
+              <input type="checkbox" id="pref-analytics" checked />
+              <span class="cookie-toggle-slider"></span>
+            </div>
+          </div>
+          <p class="cookie-cat-desc">Nous aident à comprendre comment le site est utilisé pour l'améliorer.</p>
+        </div>
+
+        <div class="cookie-cat">
+          <div class="cookie-cat-row">
+            <span class="cookie-cat-title">Préférences de jeu</span>
+            <div class="cookie-toggle">
+              <input type="checkbox" id="pref-game" checked />
+              <span class="cookie-toggle-slider"></span>
+            </div>
+          </div>
+          <p class="cookie-cat-desc">Mémorisent vos scores et réglages locaux entre deux parties.</p>
+        </div>
+
+        <div class="cookie-cat">
+          <div class="cookie-cat-row">
+            <span class="cookie-cat-title">Partenaires tiers</span>
+            <div class="cookie-toggle">
+              <input type="checkbox" id="pref-partners" checked />
+              <span class="cookie-toggle-slider"></span>
+            </div>
+          </div>
+          <p class="cookie-cat-desc">Cookies déposés par des services tiers intégrés au site.</p>
+        </div>
+
+      </div>
+      <div id="cookie-modal-footer">
+        <button id="cookie-save-prefs" onclick="savePrefs()">Enregistrer mes choix</button>
+        <button id="cookie-refuse-all" onclick="refuseAll()">Tout refuser</button>
+      </div>
     </div>
   </div>
 
@@ -405,7 +537,20 @@
       localStorage.setItem('cookiesAccepted', 'true');
       document.getElementById('cookie-banner').classList.add('hide');
     }
-    if (localStorage.getItem('cookiesAccepted') === 'true') {
+    function savePrefs() {
+      localStorage.setItem('cookiesAccepted', 'true');
+      document.getElementById('cookie-modal-overlay').classList.remove('show');
+      document.getElementById('cookie-banner').classList.add('hide');
+    }
+    function refuseAll() {
+      ['pref-ads','pref-analytics','pref-game','pref-partners'].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      localStorage.setItem('cookiesAccepted', 'refused');
+      document.getElementById('cookie-modal-overlay').classList.remove('show');
+      document.getElementById('cookie-banner').classList.add('hide');
+    }
+    if (localStorage.getItem('cookiesAccepted')) {
       document.getElementById('cookie-banner').classList.add('hide');
     }
   </script>
